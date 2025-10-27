@@ -1,4 +1,6 @@
 package com.example.mallmanagementapplication.repository;
 
-public class PurchaseRepository {
+import com.example.mallmanagementapplication.model.Purchase;
+
+public interface PurchaseRepository extends CrudRepository<Purchase>{
 }

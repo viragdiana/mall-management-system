@@ -1,4 +1,6 @@
 package com.example.mallmanagementapplication.repository;
 
-public class StaffRepository {
+import com.example.mallmanagementapplication.model.Staff;
+
+public interface StaffRepository extends CrudRepository<Staff>{
 }
