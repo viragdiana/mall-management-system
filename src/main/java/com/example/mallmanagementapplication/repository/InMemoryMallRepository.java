@@ -1,8 +1,10 @@
 package com.example.mallmanagementapplication.repository;
 
 import com.example.mallmanagementapplication.model.Mall;
+import org.springframework.stereotype.Repository;
 import java.util.*;
 
+@Repository
 public class InMemoryMallRepository implements MallRepository{
     private final Map<String, Mall> malls = new HashMap<>();
     @Override

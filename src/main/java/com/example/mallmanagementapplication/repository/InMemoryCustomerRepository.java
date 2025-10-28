@@ -1,7 +1,9 @@
 package com.example.mallmanagementapplication.repository;
 import com.example.mallmanagementapplication.model.Customer;
-
+import org.springframework.stereotype.Repository;
 import java.util.*;
+
+@Repository
 public class InMemoryCustomerRepository implements CustomerRepository {
     private final Map<String, Customer> customers = new HashMap<>();
 

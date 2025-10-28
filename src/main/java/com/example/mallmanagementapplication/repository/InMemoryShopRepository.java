@@ -1,8 +1,9 @@
 package com.example.mallmanagementapplication.repository;
 import com.example.mallmanagementapplication.model.Shop;
-
+import org.springframework.stereotype.Repository;
 import java.util.*;
 
+@Repository
 public class InMemoryShopRepository implements ShopRepository{
     private final Map<String, Shop> shops = new HashMap<>();
 
