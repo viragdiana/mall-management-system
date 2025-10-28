@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MallManagementApplication {
     public static void main(String[] args) {
         SpringApplication.run(MallManagementApplication.class, args);
+        System.out.println("✅ Mall Management System is running!");
     }
-
 }
