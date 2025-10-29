@@ -1,23 +1,30 @@
 package com.example.mallmanagementapplication.model;
 
+import com.example.mallmanagementapplication.model.MaintenanceType;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Personal de mentenanță – poate fi Electric sau Cleaning.
+ */
 public class MaintenanceStaff extends Staff {
-    private String type; // Electrical, Cleaning, etc.
-    private List<MaintenanceTask> tasks;
+    private List<StaffAssignment> assignments = new ArrayList<>();
+    private MaintenanceType type; // ELECTRICAL, CLEANING
 
-    public MaintenanceStaff() {}
+    public MaintenanceStaff() { }
 
-    public MaintenanceStaff(String id, String name, String type, List<MaintenanceTask> tasks) {
+    public MaintenanceStaff(String id, String name, MaintenanceType type) {
         super(id, name);
         this.type = type;
-        this.tasks = tasks;
     }
 
-    // Getters & Setters
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public List<StaffAssignment> getAssignments() { return assignments; }
+    public void setAssignments(List<StaffAssignment> assignments) { this.assignments = assignments; }
 
-    public List<MaintenanceTask> getTasks() { return tasks; }
-    public void setTasks(List<MaintenanceTask> tasks) { this.tasks = tasks; }
+    public void addAssignment(StaffAssignment a) {
+        if (a != null) assignments.add(a);
+    }
+
+    public MaintenanceType getType() { return type; }
+    public void setType(MaintenanceType type) { this.type = type; }
 }

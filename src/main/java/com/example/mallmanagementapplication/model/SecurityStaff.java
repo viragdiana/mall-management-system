@@ -1,16 +1,18 @@
 package com.example.mallmanagementapplication.model;
 
+/**
+ * Personal de securitate – extinde Staff.
+ */
 public class SecurityStaff extends Staff {
-    private String shift; // Morning / Evening / Night
+    private String badgeNo;
 
-    public SecurityStaff() {}
+    public SecurityStaff() { }
 
-    public SecurityStaff(String id, String name, String shift) {
+    public SecurityStaff(String id, String name, String badgeNo) {
         super(id, name);
-        this.shift = shift;
+        this.badgeNo = badgeNo;
     }
 
-    // Getters & Setters
-    public String getShift() { return shift; }
-    public void setShift(String shift) { this.shift = shift; }
+    public String getBadgeNo() { return badgeNo; }
+    public void setBadgeNo(String badgeNo) { this.badgeNo = badgeNo; }
 }
