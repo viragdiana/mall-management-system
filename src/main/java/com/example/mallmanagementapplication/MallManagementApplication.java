@@ -5,5 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class MallManagementApplication {
-
+    public static void main(String[] args) {
+        SpringApplication.run(MallManagementApplication.class, args);
+        System.out.println("Application is running");
+    }
 }

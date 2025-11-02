@@ -9,13 +9,15 @@ public class Customer implements Identifiable {
     private String name;
     private String currency;
     private List<Purchase> purchases = new ArrayList<>();
+    private String email;
 
     public Customer() { }
 
-    public Customer(String id, String name, String currency) {
+    public Customer(String id, String name, String currency, String email) {
         this.id = id;
         this.name = name;
         this.currency = currency;
+        this.email = email;
     }
 
     @Override
@@ -30,6 +32,9 @@ public class Customer implements Identifiable {
 
     public List<Purchase> getPurchases() { return purchases; }
     public void addPurchase(Purchase p) { if (p != null) purchases.add(p); }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) {this.email = email;}
 
     @Override
     public boolean equals(Object o) {

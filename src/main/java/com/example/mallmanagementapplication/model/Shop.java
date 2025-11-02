@@ -10,14 +10,16 @@ public class Shop implements Identifiable {
     private String ownerName;
     private double areaSqm;
     private List<Purchase> purchases = new ArrayList<>();
+    private ShopType type;
 
     public Shop() { }
 
-    public Shop(String id, String name, String ownerName, double areaSqm) {
+    public Shop(String id, String name, String ownerName, double areaSqm,  ShopType type) {
         this.id = id;
         this.name = name;
         this.ownerName = ownerName;
         this.areaSqm = areaSqm;
+        this.type = type;
     }
 
     @Override
@@ -36,6 +38,8 @@ public class Shop implements Identifiable {
     public List<Purchase> getPurchases() { return purchases; }
     public void addPurchase(Purchase p) { if (p != null) purchases.add(p); }
 
+    public ShopType getType() { return type; }
+    public void setType(ShopType type) { this.type = type;}
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

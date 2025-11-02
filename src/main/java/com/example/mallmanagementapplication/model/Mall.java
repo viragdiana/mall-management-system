@@ -12,13 +12,15 @@ public class Mall implements Identifiable {
     private String name;
     private String city;
     private List<Floor> floors = new ArrayList<>();
+    private String country;
 
     public Mall() { }
 
-    public Mall(String id, String name, String city) {
+    public Mall(String id, String name, String city, String country) {
         this.id = id;
         this.name = name;
         this.city = city;
+        this.country = country;
     }
 
     @Override
@@ -37,6 +39,9 @@ public class Mall implements Identifiable {
     public void addFloor(Floor floor) {
         if (floor != null) floors.add(floor);
     }
+
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country;}
 
     @Override
     public int hashCode() { return Objects.hash(id); }
