@@ -13,6 +13,7 @@ orice tip de obiect (Customer, Shop, Purchase, etc.), dar:
 - adică trebuie să aibă o metodă getId() (altfel compilatorul nu ar ști cum să obțină id-ul).
 
 */
+@org.springframework.stereotype.Repository
 public class InMemoryRepository<T extends Identifiable> implements Repository<T> {
 
     protected Map<String, T> store = new HashMap<>();

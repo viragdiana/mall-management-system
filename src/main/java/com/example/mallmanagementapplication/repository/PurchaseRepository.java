@@ -1,9 +1,11 @@
 package com.example.mallmanagementapplication.repository;
 
 import com.example.mallmanagementapplication.model.Purchase;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Repository
 public class PurchaseRepository extends InMemoryRepository<Purchase> {
     public List<Purchase> findByCustomerId(String customerId) {
         return store.values().stream()
