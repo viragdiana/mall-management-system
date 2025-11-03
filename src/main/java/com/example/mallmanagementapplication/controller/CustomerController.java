@@ -1,12 +1,15 @@
 package com.example.mallmanagementapplication.controller;
 
+
 import com.example.mallmanagementapplication.model.Customer;
 import com.example.mallmanagementapplication.service.CustomerService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/customers")
 public class CustomerController {
 
@@ -16,23 +19,31 @@ public class CustomerController {
         this.service = service;
     }
 
+    // GET /customers → show all customers
     @GetMapping
-    public List<Customer> getAllCustomers() {
-        return service.getAllCustomers();
+    public String showAllCustomers(Model model) {
+        model.addAttribute("customers", service.getAllCustomers());
+        return "customers/index"; // points to templates/customers/index.html
     }
 
-    @GetMapping("/{id}")
-    public Customer getCustomer(@PathVariable String id) {
-        return service.getCustomer(id);
+    // GET /customers/new → show form for adding new customer
+    @GetMapping("/new")
+    public String showCustomerForm(Model model) {
+        model.addAttribute("customer", new Customer());
+        return "customers/form"; // templates/customers/form.html
     }
 
+    // POST /customers → create new customer
     @PostMapping
-    public void addCustomer(@RequestBody Customer customer) {
+    public String addCustomer(@ModelAttribute Customer customer) {
         service.addCustomer(customer);
+        return "redirect:/customers"; // after saving, go back to list
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable String id) {
+    // POST /customers/{id}/delete → delete a customer
+    @PostMapping("/{id}/delete")
+    public String deleteCustomer(@PathVariable String id) {
         service.deleteCustomer(id);
+        return "redirect:/customers";
     }
 }

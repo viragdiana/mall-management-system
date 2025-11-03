@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Customer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #fafafa;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 0.6rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            margin-top: 1.5rem;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        a.back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>Add New Customer</h1>
+
+<form th:action="@{/customers}" th:object="${customer}" method="post">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" placeholder="Enter customer name" required>
+
+    <label>Currency:</label>
+    <input type="text" th:field="*{currency}" placeholder="Enter preferred currency" required>
+
+    <label>Email:</label>
+    <input type="email" th:field="*{email}" placeholder="Enter email" required>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/customers" class="back-link">← Back to List</a>
+
+</body>
+</html>

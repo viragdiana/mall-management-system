@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Customer implements Identifiable {
     private String id;
@@ -11,10 +12,12 @@ public class Customer implements Identifiable {
     private List<Purchase> purchases = new ArrayList<>();
     private String email;
 
-    public Customer() { }
+    public Customer() {
+        this.id = UUID.randomUUID().toString(); // generate unique ID automatically
+    }
 
     public Customer(String id, String name, String currency, String email) {
-        this.id = id;
+        this();
         this.name = name;
         this.currency = currency;
         this.email = email;
