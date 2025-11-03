@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Shop</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 400px; background: #f9f9f9; padding: 1.5rem; border-radius: 6px; }
+        label { display: block; margin-top: 1rem; font-weight: bold; }
+        input, select { width: 100%; padding: 0.6rem; margin-top: 0.3rem; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 1.2rem; background: #2980b9; color: white; border: none; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; }
+        a.back { display: block; margin-top: 1rem; color: #555; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>Add New Shop</h1>
+<!-- @thymesVar id="shop" type="com.example.mallmanagementapplication.model.Shop" -->
+<form th:action="@{/shops}" th:object="${shop}" method="post">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" placeholder="Shop name" required>
+
+    <label>Owner Name:</label>
+    <input type="text" th:field="*{ownerName}" placeholder="Owner name" required>
+
+    <label>Area (sqm):</label>
+    <input type="number" th:field="*{areaSqm}" placeholder="0.0" step="0.1" required>
+
+    <label>Type:</label>
+    <select th:field="*{type}">
+        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/shops" class="back">← Back to List</a>
+</body>
+</html>

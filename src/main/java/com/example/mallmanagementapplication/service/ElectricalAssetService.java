@@ -20,8 +20,11 @@ public class ElectricalAssetService {
     public ElectricalAssetService(ElectricalAssetRepository assetRepo, FloorRepository floorRepo) {
         this.assetRepo = assetRepo;
         this.floorRepo = floorRepo;
-    }
 
+    }
+    public void addAsset(ElectricalAsset asset) {
+        assetRepo.save(asset);
+    }
     /** Atașează activul la un etaj (validare + sincronizare listă pe Floor). */
     public void addAssetToFloor(String floorId, ElectricalAsset asset) {
         // 1) floor valid

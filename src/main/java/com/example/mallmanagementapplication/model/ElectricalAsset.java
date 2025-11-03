@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.model;
 import com.example.mallmanagementapplication.model.AssetStatus;
 import com.example.mallmanagementapplication.model.ElectricalType;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Reprezintă echipamente electrice de pe un etaj (lift, AC, lumini etc.).
@@ -13,10 +14,12 @@ public class ElectricalAsset implements Identifiable {
     private ElectricalType type;
     private AssetStatus status;
 
-    public ElectricalAsset() { }
+    public ElectricalAsset() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public ElectricalAsset(String id, String floorId, ElectricalType type, AssetStatus status) {
-        this.id = id;
+        this();
         this.floorId = floorId;
         this.type = type;
         this.status = status;

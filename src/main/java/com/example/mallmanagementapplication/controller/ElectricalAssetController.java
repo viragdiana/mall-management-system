@@ -2,13 +2,14 @@ package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.AssetStatus;
 import com.example.mallmanagementapplication.model.ElectricalAsset;
+import com.example.mallmanagementapplication.model.ElectricalType;
 import com.example.mallmanagementapplication.service.ElectricalAssetService;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.stereotype.Controller;
 import java.util.List;
-
-@RestController
-@RequestMapping("/electrical-assets")
+@Controller
+@RequestMapping("/assets")
 public class ElectricalAssetController {
 
     private final ElectricalAssetService service;
@@ -18,28 +19,28 @@ public class ElectricalAssetController {
     }
 
     @GetMapping
-    public List<ElectricalAsset> getAllAssets() {
-        return service.getAllAssets();
+    public String index(Model model) {
+        model.addAttribute("assets", service.getAllAssets());
+        return "assets/index";
     }
 
-    @GetMapping("/{id}")
-    public ElectricalAsset getAsset(@PathVariable String id) {
-        return service.getAsset(id);
+    @GetMapping("/new")
+    public String form(Model model) {
+        model.addAttribute("asset", new ElectricalAsset());
+        model.addAttribute("statuses", AssetStatus.values());
+        model.addAttribute("types", ElectricalType.values());
+        return "assets/form";
     }
 
-    @PostMapping("/{floorId}")
-    public String addAssetToFloor(@PathVariable String floorId, @RequestBody ElectricalAsset asset) {
-        service.addAssetToFloor(floorId, asset);
-        return "Asset added to floor successfully.";
+    @PostMapping
+    public String create(@ModelAttribute ElectricalAsset asset) {
+        service.addAsset(asset);
+        return "redirect:/assets";
     }
 
-    @GetMapping("/status/{status}")
-    public List<ElectricalAsset> getAssetsByStatus(@PathVariable AssetStatus status) {
-        return service.getAssetsByStatus(status);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteAsset(@PathVariable String id) {
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable String id) {
         service.deleteAsset(id);
+        return "redirect:/assets";
     }
 }

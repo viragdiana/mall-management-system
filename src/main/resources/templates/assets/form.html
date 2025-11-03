@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Electrical Asset</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 400px; background: #f9f9f9; padding: 1.5rem; border-radius: 6px; }
+        label { display: block; margin-top: 1rem; font-weight: bold; }
+        input, select { width: 100%; padding: 0.6rem; margin-top: 0.3rem; border: 1px solid #ccc; border-radius: 4px; }
+        button { margin-top: 1.2rem; background: #2980b9; color: white; border: none; padding: 0.6rem 1rem; border-radius: 4px; cursor: pointer; }
+        a.back { display: block; margin-top: 1rem; color: #555; text-decoration: none; }
+    </style>
+</head>
+<body>
+<h1>Add New Electrical Asset</h1>
+
+<form th:action="@{/assets}" th:object="${asset}" method="post">
+    <label>Floor ID:</label>
+    <input type="text" th:field="*{floorId}" placeholder="FLOOR_1" required>
+
+    <label>Type:</label>
+    <select th:field="*{type}">
+        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+    </select>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/assets" class="back">← Back to list</a>
+</body>
+</html>

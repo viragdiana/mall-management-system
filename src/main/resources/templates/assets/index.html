@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Electrical Assets</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; }
+        th { background-color: #f3f3f3; }
+        button { background: crimson; color: white; border: none; padding: 0.4rem 0.8rem; cursor: pointer; }
+        a { text-decoration: none; color: #2980b9; }
+    </style>
+</head>
+<body>
+<h1>Electrical Assets</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Floor ID</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="a : ${assets}">
+        <td th:text="${a.id}"></td>
+        <td th:text="${a.floorId}"></td>
+        <td th:text="${a.type}"></td>
+        <td th:text="${a.status}"></td>
+        <td>
+            <form th:action="@{'/assets/' + ${a.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<br>
+<a href="/assets/new">Add new asset</a>
+</body>
+</html>

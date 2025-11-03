@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Mall – conține mai multe etaje (Floor).
@@ -14,10 +15,12 @@ public class Mall implements Identifiable {
     private List<Floor> floors = new ArrayList<>();
     private String country;
 
-    public Mall() { }
+    public Mall() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public Mall(String id, String name, String city, String country) {
-        this.id = id;
+        this();
         this.name = name;
         this.city = city;
         this.country = country;

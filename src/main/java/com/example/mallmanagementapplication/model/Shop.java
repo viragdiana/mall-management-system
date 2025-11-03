@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Shop implements Identifiable {
     private String id;
@@ -12,10 +13,12 @@ public class Shop implements Identifiable {
     private List<Purchase> purchases = new ArrayList<>();
     private ShopType type;
 
-    public Shop() { }
+    public Shop() {
+        this.id = UUID.randomUUID().toString();
+    }
 
     public Shop(String id, String name, String ownerName, double areaSqm,  ShopType type) {
-        this.id = id;
+        this();
         this.name = name;
         this.ownerName = ownerName;
         this.areaSqm = areaSqm;

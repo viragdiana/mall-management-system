@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Malls</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem; }
+        th { background-color: #f3f3f3; }
+        button { background: crimson; color: white; border: none; padding: 0.4rem 0.8rem; cursor: pointer; }
+        a { text-decoration: none; color: #2980b9; }
+    </style>
+</head>
+<body>
+<h1>Malls</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Country</th>
+        <th>Floors</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="m : ${malls}">
+        <td th:text="${m.id}"></td>
+        <td th:text="${m.name}"></td>
+        <td th:text="${m.city}"></td>
+        <td th:text="${m.country}"></td>
+        <td th:text="${#lists.size(m.floors)}"></td>
+        <td>
+            <form th:action="@{'/malls/' + ${m.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<br>
+<a href="/malls/new">Add new mall</a>
+</body>
+</html>

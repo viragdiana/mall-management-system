@@ -1,12 +1,14 @@
 package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.Shop;
+import com.example.mallmanagementapplication.model.ShopType;
 import com.example.mallmanagementapplication.service.ShopService;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
-
-@RestController
+@Controller
 @RequestMapping("/shops")
 public class ShopController {
 
@@ -16,24 +18,32 @@ public class ShopController {
         this.service = service;
     }
 
+    // ✅ GET ALL
     @GetMapping
-    public List<Shop> getAllShops() {
-        return service.getAllShops();
+    public String getAllShops(Model model) {
+        model.addAttribute("shops", service.getAllShops());
+        return "shops/index";
     }
 
-    @GetMapping("/{id}")
-    public Shop getShop(@PathVariable String id) {
-        return service.getShop(id);
+    // ✅ CREATE FORM
+    @GetMapping("/new")
+    public String showShopForm(Model model) {
+        model.addAttribute("shop", new Shop());
+        model.addAttribute("types", ShopType.values()); // dropdown options
+        return "shops/form";
     }
 
+    // ✅ CREATE (POST)
     @PostMapping
-    public void addShop(@RequestBody Shop shop) {
+    public String addShop(@ModelAttribute Shop shop) {
         service.addShop(shop);
+        return "redirect:/shops";
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteShop(@PathVariable String id) {
+    // ✅ DELETE (POST)
+    @PostMapping("/{id}/delete")
+    public String deleteShop(@PathVariable String id) {
         service.deleteShop(id);
+        return "redirect:/shops";
     }
 }
-
