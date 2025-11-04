@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #fafafa;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        tr:hover {
+            background: #f9f9f9;
+        }
+        button {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e74c3c;
+        }
+        a.add-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.6rem 1rem;
+            background-color: #27ae60;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        a.add-btn:hover {
+            background-color: #2ecc71;
+        }
+        .role {
+            font-weight: bold;
+        }
+        .maintenance {
+            color: #2980b9;
+        }
+        .security {
+            color: #16a085;
+        }
+    </style>
+</head>
+<body>
+<h1>Staff List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Details</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${staffList}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.name}"></td>
+
+        <!-- ✅ Secure version -->
+        <td th:text="${s.getClass().getName().substring(s.getClass().getName().lastIndexOf('.') + 1)}"></td>
+            th:classappend="${s instanceof T(com.example.mallmanagementapplication.model.MaintenanceStaff)} ? 'role maintenance' : 'role security'"></td>
+
+        <td>
+            <span th:if="${s instanceof T(com.example.mallmanagementapplication.model.MaintenanceStaff)}"
+                  th:text="${#strings.concat('Maintenance - ', s.type)}"></span>
+            <span th:if="${s instanceof T(com.example.mallmanagementapplication.model.SecurityStaff)}"
+                  th:text="${#strings.concat('Security - ', s.badgeNo)}"></span>
+        </td>
+
+        <td>
+            <form th:action="@{'/staff/' + ${s.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/staff/new" class="add-btn">Add New Staff</a>
+
+</body>
+</html>

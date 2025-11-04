@@ -17,7 +17,7 @@ public class Shop implements Identifiable {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Shop(String id, String name, String ownerName, double areaSqm,  ShopType type) {
+    public Shop(/*String id,*/ String name, String ownerName, double areaSqm,  ShopType type) {
         this();
         this.name = name;
         this.ownerName = ownerName;

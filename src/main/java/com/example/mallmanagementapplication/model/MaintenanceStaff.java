@@ -11,10 +11,10 @@ public class MaintenanceStaff extends Staff {
     private List<StaffAssignment> assignments = new ArrayList<>();
     private MaintenanceType type; // ELECTRICAL, CLEANING
 
-    public MaintenanceStaff() { }
+    public MaintenanceStaff() { super();}
 
-    public MaintenanceStaff(String id, String name, MaintenanceType type) {
-        super(id, name);
+    public MaintenanceStaff(/*String id,*/ String name, MaintenanceType type) {
+        super(name);
         this.type = type;
     }
 

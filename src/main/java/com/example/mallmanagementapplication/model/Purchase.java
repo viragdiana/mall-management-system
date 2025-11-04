@@ -1,6 +1,7 @@
 package com.example.mallmanagementapplication.model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Purchase implements Identifiable {
     private String id;
@@ -8,10 +9,10 @@ public class Purchase implements Identifiable {
     private String shopId;
     private double amount;
 
-    public Purchase() { }
+    public Purchase() { this.id = UUID.randomUUID().toString();}
 
-    public Purchase(String id, String customerId, String shopId, double amount) {
-        this.id = id;
+    public Purchase(/*String id,*/ String customerId, String shopId, double amount) {
+        this();
         this.customerId = customerId;
         this.shopId = shopId;
         this.amount = amount;

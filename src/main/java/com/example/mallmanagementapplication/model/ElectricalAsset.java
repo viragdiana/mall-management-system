@@ -18,7 +18,7 @@ public class ElectricalAsset implements Identifiable {
         this.id = UUID.randomUUID().toString();
     }
 
-    public ElectricalAsset(String id, String floorId, ElectricalType type, AssetStatus status) {
+    public ElectricalAsset(/*String id,*/ String floorId, ElectricalType type, AssetStatus status) {
         this();
         this.floorId = floorId;
         this.type = type;

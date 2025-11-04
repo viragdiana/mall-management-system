@@ -2,8 +2,9 @@ package com.example.mallmanagementapplication.model;
 
 import com.example.mallmanagementapplication.model.Shift;
 import java.util.Objects;
+import java.util.UUID;
 
-/**
+/*
  * Asociază un angajat (Staff) cu un etaj (Floor) într-un anumit schimb.
  */
 public class StaffAssignment implements Identifiable {
@@ -12,10 +13,10 @@ public class StaffAssignment implements Identifiable {
     private String staffId;
     private Shift shift;
 
-    public StaffAssignment() { }
+    public StaffAssignment() { this.id = UUID.randomUUID().toString();}
 
-    public StaffAssignment(String id, String floorId, String staffId, Shift shift) {
-        this.id = id;
+    public StaffAssignment(/*String id,*/ String floorId, String staffId, Shift shift) {
+        this();
         this.floorId = floorId;
         this.staffId = staffId;
         this.shift = shift;

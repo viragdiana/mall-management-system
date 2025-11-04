@@ -20,7 +20,7 @@ public class Floor implements Identifiable {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Floor(String id, int number) {
+    public Floor(/*String id,*/ int number) {
         this();
         this.number = number;
     }

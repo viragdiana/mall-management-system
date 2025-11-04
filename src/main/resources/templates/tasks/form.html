@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Maintenance Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+            background-color: #fafafa;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            background: white;
+            padding: 2rem;
+            width: 420px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 0.6rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        textarea { resize: vertical; }
+        button {
+            margin-top: 1.5rem;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3498db;
+        }
+        a.back-link {
+            display: inline-block;
+            margin-top: 1rem;
+            text-decoration: none;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>Add Maintenance Task</h1>
+
+<form th:action="@{/tasks}" th:object="${task}" method="post">
+
+    <label>Description:</label>
+    <textarea th:field="*{description}" placeholder="Enter description" required></textarea>
+
+    <label>Assignment ID:</label>
+    <input type="text" th:field="*{assignmentId}" placeholder="Enter assignment ID (optional)">
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/tasks" class="back-link">← Back to List</a>
+
+</body>
+</html>

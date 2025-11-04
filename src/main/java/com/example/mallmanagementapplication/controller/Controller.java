@@ -1,5 +1,4 @@
 package com.example.mallmanagementapplication.controller;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -7,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
     @GetMapping("/hello")
     public String hello() {
-        return "Mall management system is running! 👋";
+        return "Mall management system is running!";
     }
 
 }

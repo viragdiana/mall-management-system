@@ -1,6 +1,7 @@
 package com.example.mallmanagementapplication.model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Clasă abstractă pentru toți angajații.
@@ -9,10 +10,10 @@ public abstract class Staff implements Identifiable {
     private String id;
     private String name;
 
-    protected Staff() { }
+    protected Staff() {this.id = UUID.randomUUID().toString(); }
 
-    protected Staff(String id, String name) {
-        this.id = id;
+    protected Staff(/*String id,*/ String name) {
+        this();
         this.name = name;
     }
 

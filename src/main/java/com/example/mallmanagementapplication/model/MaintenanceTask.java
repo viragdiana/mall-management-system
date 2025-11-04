@@ -2,6 +2,7 @@ package com.example.mallmanagementapplication.model;
 
 import com.example.mallmanagementapplication.model.TaskStatus;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Task de mentenanță, legat opțional de o asignare de personal (assignmentId).
@@ -12,10 +13,10 @@ public class MaintenanceTask implements Identifiable {
     private TaskStatus status; // PLANNED, ACTIVE, DONE
     private String assignmentId; // poate fi null
 
-    public MaintenanceTask() { }
+    public MaintenanceTask() { this.id = UUID.randomUUID().toString();}
 
-    public MaintenanceTask(String id, String description, TaskStatus status) {
-        this.id = id;
+    public MaintenanceTask(/*String id,*/ String description, TaskStatus status) {
+        this();
         this.description = description;
         this.status = status;
     }

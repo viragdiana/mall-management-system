@@ -6,10 +6,10 @@ package com.example.mallmanagementapplication.model;
 public class SecurityStaff extends Staff {
     private String badgeNo;
 
-    public SecurityStaff() { }
+    public SecurityStaff() {super(); }
 
-    public SecurityStaff(String id, String name, String badgeNo) {
-        super(id, name);
+    public SecurityStaff(/*String id,*/ String name, String badgeNo) {
+        super(name);
         this.badgeNo = badgeNo;
     }
 

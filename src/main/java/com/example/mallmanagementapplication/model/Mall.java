@@ -19,7 +19,7 @@ public class Mall implements Identifiable {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Mall(String id, String name, String city, String country) {
+    public Mall(/*String id,*/ String name, String city, String country) {
         this();
         this.name = name;
         this.city = city;

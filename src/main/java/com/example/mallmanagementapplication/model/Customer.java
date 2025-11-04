@@ -16,7 +16,7 @@ public class Customer implements Identifiable {
         this.id = UUID.randomUUID().toString(); // generate unique ID automatically
     }
 
-    public Customer(String id, String name, String currency, String email) {
+    public Customer(/*String id,*/ String name, String currency, String email) {
         this();
         this.name = name;
         this.currency = currency;
