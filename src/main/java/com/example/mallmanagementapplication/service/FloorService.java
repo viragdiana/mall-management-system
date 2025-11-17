@@ -5,8 +5,12 @@ import com.example.mallmanagementapplication.repository.FloorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.mallmanagementapplication.service.Validation.requireExists;
+
 @Service
 public class FloorService {
+
     private final FloorRepository floorRepo;
 
     public FloorService(FloorRepository floorRepo) {
@@ -18,7 +22,7 @@ public class FloorService {
     }
 
     public Floor getFloor(String id) {
-        return floorRepo.findById(id);
+        return requireExists(floorRepo, id, "Floor");
     }
 
     public List<Floor> getAllFloors() {
@@ -26,7 +30,7 @@ public class FloorService {
     }
 
     public void deleteFloor(String id) {
+        requireExists(floorRepo, id, "Floor");
         floorRepo.delete(id);
     }
-
 }

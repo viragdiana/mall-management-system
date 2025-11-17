@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Edit Floor</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        form{width:300px;background:#f9f9f9;padding:1.5rem;border-radius:6px;}
+        label{display:block;margin-top:1rem;}
+        input{width:100%;padding:.5rem;}
+        button{margin-top:1rem;padding:.6rem;background:#2980b9;color:white;border:none;border-radius:4px;}
+    </style></head>
+<body>
+
+<h1>Edit Floor</h1>
+
+<form th:action="@{/floors/{id}/edit(id=${floor.id})}" th:object="${floor}" method="post">
+    <label>Floor Number:</label>
+    <input th:field="*{number}" type="number" required>
+    <button>Update</button>
+</form>
+
+<a href="/floors">← Back</a>
+
+</body>
+</html>

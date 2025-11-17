@@ -1,0 +1,12 @@
+[
+  {"id":"p1","customerId":"c1","shopId":"s1","amount":120.50},
+  {"id":"p2","customerId":"c2","shopId":"s3","amount":340.00},
+  {"id":"p3","customerId":"c3","shopId":"s2","amount":89.99},
+  {"id":"p4","customerId":"c4","shopId":"s5","amount":220.00},
+  {"id":"p5","customerId":"c5","shopId":"s6","amount":150.75},
+  {"id":"p6","customerId":"c6","shopId":"s4","amount":510.00},
+  {"id":"p7","customerId":"c7","shopId":"s7","amount":75.00},
+  {"id":"p8","customerId":"c8","shopId":"s8","amount":132.30},
+  {"id":"p9","customerId":"c9","shopId":"s9","amount":430.00},
+  {"id":"p10","customerId":"c10","shopId":"s10","amount":99.99}
+]

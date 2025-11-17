@@ -1,0 +1,12 @@
+[
+  {"id":"sec1","name":"Andrei Pop","badgeNo":"B1001"},
+  {"id":"sec2","name":"Cristina Iacob","badgeNo":"B1002"},
+  {"id":"sec3","name":"Radu Varga","badgeNo":"B1003"},
+  {"id":"sec4","name":"Ioana Szabo","badgeNo":"B1004"},
+  {"id":"sec5","name":"Marius Ilea","badgeNo":"B1005"},
+  {"id":"sec6","name":"Elena Popescu","badgeNo":"B1006"},
+  {"id":"sec7","name":"Dorian Neagu","badgeNo":"B1007"},
+  {"id":"sec8","name":"Paula Zaharia","badgeNo":"B1008"},
+  {"id":"sec9","name":"Lucian Muntean","badgeNo":"B1009"},
+  {"id":"sec10","name":"Miruna Stan","badgeNo":"B1010"}
+]

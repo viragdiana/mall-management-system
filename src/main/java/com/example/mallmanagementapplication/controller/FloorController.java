@@ -16,28 +16,51 @@ public class FloorController {
         this.service = service;
     }
 
-    // Afișează toate etajele
+    // LIST
     @GetMapping
     public String index(Model model) {
         model.addAttribute("floors", service.getAllFloors());
         return "floors/index";
     }
 
-    // Formular pentru un etaj nou
+    // DETAILS
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        model.addAttribute("floor", service.getFloor(id));
+        return "floors/details";
+    }
+
+    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("floor", new Floor());
         return "floors/form";
     }
 
-    // Creează etajul nou
+    // CREATE
     @PostMapping
     public String create(@ModelAttribute Floor floor) {
         service.addFloor(floor);
         return "redirect:/floors";
     }
 
-    // Șterge etajul
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        model.addAttribute("floor", service.getFloor(id));
+        return "floors/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable String id, @ModelAttribute Floor updated) {
+        Floor existing = service.getFloor(id);
+        existing.setNumber(updated.getNumber());
+        service.addFloor(existing);
+        return "redirect:/floors";
+    }
+
+    // DELETE
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.deleteFloor(id);

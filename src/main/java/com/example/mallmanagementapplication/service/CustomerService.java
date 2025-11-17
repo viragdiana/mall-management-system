@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.example.mallmanagementapplication.service.Validation.requireExists;
+
 @Service
 public class CustomerService {
+
     private final CustomerRepository customerRepo;
 
     public CustomerService(CustomerRepository customerRepo) {
@@ -19,7 +22,7 @@ public class CustomerService {
     }
 
     public Customer getCustomer(String id) {
-        return customerRepo.findById(id);
+        return requireExists(customerRepo, id, "Customer");
     }
 
     public List<Customer> getAllCustomers() {
@@ -27,6 +30,7 @@ public class CustomerService {
     }
 
     public void deleteCustomer(String id) {
+        requireExists(customerRepo, id, "Customer");
         customerRepo.delete(id);
     }
 }

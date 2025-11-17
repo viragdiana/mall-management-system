@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Task Details</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        .box{background:#f9f9f9;width:350px;padding:1.5rem;border-radius:6px;}
+        p{margin:.5rem;}a.button{background:#2980b9;color:white;
+                            padding:.4rem .8rem;border-radius:4px;text-decoration:none;}
+    </style></head>
+<body>
+
+<h1>Task Details</h1>
+
+<div class="box">
+    <p><strong>Description:</strong> <span th:text="${task.description}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${task.status}"></span></p>
+    <p><strong>Assignment ID:</strong> <span th:text="${task.assignmentId}"></span></p>
+</div>
+
+<a href="/tasks" class="button">← Back</a>
+
+</body>
+</html>

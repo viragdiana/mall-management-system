@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Edit Staff</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        form{width:350px;background:#f9f9f9;padding:1.5rem;border-radius:6px;}
+        label{margin-top:1rem;display:block;}input,select{width:100%;padding:.5rem;}
+        button{margin-top:1rem;background:#2980b9;color:white;border:none;padding:.6rem;border-radius:4px;}
+    </style></head>
+<body>
+
+<h1>Edit Maintenance Staff</h1>
+
+<form th:action="@{/maintenance-staff/{id}/edit(id=${staff.id})}" th:object="${staff}" method="post">
+
+    <label>Name:</label>
+    <input th:field="*{name}" required>
+
+    <label>Type:</label>
+    <select th:field="*{type}">
+        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+    </select>
+
+    <button>Update</button>
+</form>
+
+<a href="/maintenance-staff">← Back</a>
+
+</body>
+</html>

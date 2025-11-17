@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Shop</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        form { width:400px;background:#f9f9f9;padding:1.5rem;border-radius:6px; }
+        label { display:block;margin-top:1rem; }
+        input, select { width:100%;padding:0.5rem;margin-top:0.3rem; }
+        button { margin-top:1rem;padding:0.6rem;background:#2980b9;color:white;border:none;border-radius:4px; }
+    </style>
+</head>
+<body>
+
+<h1>Edit Shop</h1>
+
+<form th:action="@{/shops/{id}/edit(id=${shop.id})}" th:object="${shop}" method="post">
+
+    <label>Name:</label>
+    <input th:field="*{name}" required>
+
+    <label>Owner Name:</label>
+    <input th:field="*{ownerName}" required>
+
+    <label>Area (sqm):</label>
+    <input th:field="*{areaSqm}" type="number" step="0.1" required>
+
+    <label>Type:</label>
+    <select th:field="*{type}">
+        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+    </select>
+
+    <button type="submit">Update</button>
+</form>
+
+<a href="/shops">← Back</a>
+
+</body>
+</html>

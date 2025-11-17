@@ -17,31 +17,59 @@ public class MaintenanceTaskController {
         this.service = service;
     }
 
-    // ✅ GET /tasks → show all tasks
+    // LIST
     @GetMapping
-    public String showAllTasks(Model model) {
+    public String index(Model model) {
         model.addAttribute("tasks", service.getAllTasks());
-        return "tasks/index"; // points to templates/tasks/index.html
+        return "tasks/index";
     }
 
-    // ✅ GET /tasks/new → show the form for adding a new task
+    // DETAILS
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        model.addAttribute("task", service.getTask(id));
+        return "tasks/details";
+    }
+
+    // FORM
     @GetMapping("/new")
-    public String showTaskForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("task", new MaintenanceTask());
-        model.addAttribute("statuses", TaskStatus.values()); // enum values
-        return "tasks/form"; // templates/tasks/form.html
+        model.addAttribute("statuses", TaskStatus.values());
+        return "tasks/form";
     }
 
-    // ✅ POST /tasks → create a new task
+    // CREATE
     @PostMapping
-    public String addTask(@ModelAttribute MaintenanceTask task) {
+    public String create(@ModelAttribute MaintenanceTask task) {
         service.addTask(task);
         return "redirect:/tasks";
     }
 
-    // ✅ POST /tasks/{id}/delete → delete a task
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        model.addAttribute("task", service.getTask(id));
+        model.addAttribute("statuses", TaskStatus.values());
+        return "tasks/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable String id, @ModelAttribute MaintenanceTask updated) {
+        MaintenanceTask existing = service.getTask(id);
+
+        existing.setDescription(updated.getDescription());
+        existing.setStatus(updated.getStatus());
+        existing.setAssignmentId(updated.getAssignmentId());
+
+        service.addTask(existing);
+        return "redirect:/tasks";
+    }
+
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String deleteTask(@PathVariable String id) {
+    public String delete(@PathVariable String id) {
         service.deleteTask(id);
         return "redirect:/tasks";
     }

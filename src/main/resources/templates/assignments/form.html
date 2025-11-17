@@ -1,72 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Assignment</title>
+<head><meta charset="UTF-8"><title>New Assignment</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-            background-color: #fafafa;
-        }
-        h1 { color: #333; }
-        form {
-            background: white;
-            padding: 2rem;
-            width: 420px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 0.6rem;
-            margin-top: 0.3rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            margin-top: 1.5rem;
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            padding: 0.7rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover { background-color: #3498db; }
-        a.back-link {
-            display: inline-block;
-            margin-top: 1rem;
-            text-decoration: none;
-            color: #555;
-        }
-    </style>
-</head>
+        body{font-family:Arial;margin:2rem;}
+        form{width:350px;background:#f9f9f9;padding:1.5rem;border-radius:6px;}
+        label{margin-top:1rem;display:block;}
+        select{width:100%;padding:.5rem;}
+        button{margin-top:1rem;background:#2980b9;color:white;border:none;padding:.6rem;border-radius:4px;}
+    </style></head>
 <body>
-<h1>Add Staff Assignment</h1>
+
+<h1>New Staff Assignment</h1>
 
 <form th:action="@{/assignments}" th:object="${assignment}" method="post">
 
-    <label>Floor ID:</label>
-    <input type="text" th:field="*{floorId}" placeholder="Paste floor ID" required>
+    <label>Floor:</label>
+    <select th:field="*{floorId}">
+        <option th:each="f : ${floors}" th:value="${f.id}" th:text="${'Floor ' + f.number}"></option>
+    </select>
 
-    <label>Staff ID:</label>
-    <input type="text" th:field="*{staffId}" placeholder="Paste staff ID" required>
+    <label>Staff:</label>
+    <select th:field="*{staffId}">
+        <optgroup label="Maintenance">
+            <option th:each="m : ${maintenanceStaff}" th:value="${m.id}" th:text="${m.name}"></option>
+        </optgroup>
+        <optgroup label="Security">
+            <option th:each="s : ${securityStaff}" th:value="${s.id}" th:text="${s.name}"></option>
+        </optgroup>
+    </select>
 
     <label>Shift:</label>
     <select th:field="*{shift}">
-        <option th:each="s : ${shifts}" th:value="${s}" th:text="${s}"></option>
+        <option th:each="sh : ${shifts}" th:value="${sh}" th:text="${sh}"></option>
     </select>
 
-    <button type="submit">Save</button>
+    <button>Save</button>
 </form>
 
-<a href="/assignments" class="back-link">← Back to List</a>
+<a href="/assignments">← Back</a>
 
 </body>
 </html>

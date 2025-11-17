@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shop Details</title>
+    <style>
+        body { font-family:Arial;margin:2rem; }
+        .box { background:#f9f9f9;padding:1.5rem;border-radius:6px;width:350px; }
+        p { margin:0.5rem 0; }
+        a.button { padding:0.4rem 0.8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none; }
+    </style>
+</head>
+<body>
+
+<h1>Shop Details</h1>
+
+<div class="box">
+    <p><strong>Name:</strong> <span th:text="${shop.name}"></span></p>
+    <p><strong>Owner:</strong> <span th:text="${shop.ownerName}"></span></p>
+    <p><strong>Area:</strong> <span th:text="${shop.areaSqm}"></span> sqm</p>
+    <p><strong>Type:</strong> <span th:text="${shop.type}"></span></p>
+</div>
+
+<a href="/shops" class="button">← Back</a>
+
+</body>
+</html>

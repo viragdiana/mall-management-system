@@ -24,33 +24,66 @@ public class PurchaseController {
         this.shopService = shopService;
     }
 
-    // GET /purchases → show all purchases
+    // LIST
     @GetMapping
-    public String showAllPurchases(Model model) {
+    public String index(Model model) {
         model.addAttribute("purchases", service.getAllPurchases());
-        return "purchases/index"; // templates/purchases/index.html
+        return "purchases/index";
     }
 
-    // GET /purchases/new → show form for new purchase
+    // DETAILS
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        model.addAttribute("purchase", service.getPurchase(id));
+        model.addAttribute("customer", customerService.getCustomer(service.getPurchase(id).getCustomerId()));
+        model.addAttribute("shop", shopService.getShop(service.getPurchase(id).getShopId()));
+        return "purchases/details";
+    }
+
+    // CREATE FORM
     @GetMapping("/new")
-    public String showPurchaseForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("purchase", new Purchase());
         model.addAttribute("customers", customerService.getAllCustomers());
         model.addAttribute("shops", shopService.getAllShops());
         return "purchases/form";
     }
 
-
-    // POST /purchases → create new purchase
+    // CREATE
     @PostMapping
-    public String addPurchase(@ModelAttribute Purchase purchase) {
+    public String create(@ModelAttribute Purchase purchase) {
         service.createPurchase(purchase);
         return "redirect:/purchases";
     }
 
-    // POST /purchases/{id}/delete → delete purchase
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        Purchase existing = service.getPurchase(id);
+
+        model.addAttribute("purchase", existing);
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("shops", shopService.getAllShops());
+
+        return "purchases/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable String id, @ModelAttribute Purchase updated) {
+        Purchase existing = service.getPurchase(id);
+
+        existing.setCustomerId(updated.getCustomerId());
+        existing.setShopId(updated.getShopId());
+        existing.setAmount(updated.getAmount());
+
+        service.createPurchase(existing);
+        return "redirect:/purchases";
+    }
+
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String deletePurchase(@PathVariable String id) {
+    public String delete(@PathVariable String id) {
         service.deletePurchase(id);
         return "redirect:/purchases";
     }

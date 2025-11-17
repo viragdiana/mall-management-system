@@ -6,39 +6,44 @@
     <style>
         body { font-family: Arial; margin: 2rem; }
         table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ccc; padding: 0.5rem; }
-        th { background-color: #f3f3f3; }
-        button { background: crimson; color: white; border: none; padding: 0.4rem 0.8rem; cursor: pointer; }
-        a { text-decoration: none; color: #2980b9; }
+        th, td { border: 1px solid #ccc; padding: .6rem; }
+        th { background:#f2f2f2; }
+        a.button, button {
+            padding: .5rem .8rem;
+            background:#2980b9; color:white;
+            border-radius:4px; text-decoration:none;
+        }
+        button.delete-btn { background:#c0392b;border:none; }
     </style>
 </head>
 <body>
+
 <h1>Malls</h1>
 
+<a href="/malls/new" class="button">Add Mall</a>
+
 <table>
+    <thead>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>City</th>
-        <th>Country</th>
-        <th>Floors</th>
-        <th>Actions</th>
+        <th>Name</th><th>City</th><th>Country</th><th>Actions</th>
     </tr>
+    </thead>
+
+    <tbody>
     <tr th:each="m : ${malls}">
-        <td th:text="${m.id}"></td>
         <td th:text="${m.name}"></td>
         <td th:text="${m.city}"></td>
         <td th:text="${m.country}"></td>
-        <td th:text="${#lists.size(m.floors)}"></td>
         <td>
-            <form th:action="@{'/malls/' + ${m.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
+            <a th:href="@{/malls/{id}(id=${m.id})}" class="button">Details</a>
+            <a th:href="@{/malls/{id}/edit(id=${m.id})}" class="button">Edit</a>
+            <form th:action="@{/malls/{id}/delete(id=${m.id})}" method="post" style="display:inline">
+                <button class="delete-btn">Delete</button>
             </form>
         </td>
     </tr>
+    </tbody>
 </table>
 
-<br>
-<a href="/malls/new">Add new mall</a>
 </body>
 </html>

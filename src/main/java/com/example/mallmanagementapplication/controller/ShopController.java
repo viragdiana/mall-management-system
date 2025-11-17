@@ -3,11 +3,10 @@ package com.example.mallmanagementapplication.controller;
 import com.example.mallmanagementapplication.model.Shop;
 import com.example.mallmanagementapplication.model.ShopType;
 import com.example.mallmanagementapplication.service.ShopService;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
-import java.util.List;
 @Controller
 @RequestMapping("/shops")
 public class ShopController {
@@ -18,31 +17,60 @@ public class ShopController {
         this.service = service;
     }
 
-    // ✅ GET ALL
+    // LIST ALL
     @GetMapping
-    public String getAllShops(Model model) {
+    public String index(Model model) {
         model.addAttribute("shops", service.getAllShops());
         return "shops/index";
     }
 
-    // ✅ CREATE FORM
+    // DETAILS
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        model.addAttribute("shop", service.getShop(id));
+        return "shops/details";
+    }
+
+    // CREATE FORM
     @GetMapping("/new")
-    public String showShopForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("shop", new Shop());
-        model.addAttribute("types", ShopType.values()); // dropdown options
+        model.addAttribute("types", ShopType.values());
         return "shops/form";
     }
 
-    // ✅ CREATE (POST)
+    // CREATE
     @PostMapping
-    public String addShop(@ModelAttribute Shop shop) {
+    public String create(@ModelAttribute Shop shop) {
         service.addShop(shop);
         return "redirect:/shops";
     }
 
-    // ✅ DELETE (POST)
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        model.addAttribute("shop", service.getShop(id));
+        model.addAttribute("types", ShopType.values());
+        return "shops/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable String id, @ModelAttribute Shop updated) {
+        Shop existing = service.getShop(id);
+
+        existing.setName(updated.getName());
+        existing.setOwnerName(updated.getOwnerName());
+        existing.setAreaSqm(updated.getAreaSqm());
+        existing.setType(updated.getType());
+
+        service.addShop(existing);
+        return "redirect:/shops";
+    }
+
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String deleteShop(@PathVariable String id) {
+    public String delete(@PathVariable String id) {
         service.deleteShop(id);
         return "redirect:/shops";
     }

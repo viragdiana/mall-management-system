@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mall Details</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        .box{background:#f9f9f9;padding:1.5rem;width:350px;border-radius:6px;}
+        a.button{padding:.5rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
+    </style>
+</head>
+<body>
+
+<h1>Mall Details</h1>
+
+<div class="box">
+    <p><strong>Name:</strong> <span th:text="${mall.name}"></span></p>
+    <p><strong>City:</strong> <span th:text="${mall.city}"></span></p>
+    <p><strong>Country:</strong> <span th:text="${mall.country}"></span></p>
+</div>
+
+<a href="/malls" class="button">← Back</a>
+
+</body>
+</html>

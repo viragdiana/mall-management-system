@@ -1,0 +1,12 @@
+[
+  {"id":"ms1","name":"Ion Electrician","type":"ELECTRICAL","assignments":[]},
+  {"id":"ms2","name":"George Curatenie","type":"CLEANING","assignments":[]},
+  {"id":"ms3","name":"Alex Electrician","type":"ELECTRICAL","assignments":[]},
+  {"id":"ms4","name":"Mara Curatenie","type":"CLEANING","assignments":[]},
+  {"id":"ms5","name":"Ionut Electrician","type":"ELECTRICAL","assignments":[]},
+  {"id":"ms6","name":"Daria Curatenie","type":"CLEANING","assignments":[]},
+  {"id":"ms7","name":"Paul Electrician","type":"ELECTRICAL","assignments":[]},
+  {"id":"ms8","name":"Oana Curatenie","type":"CLEANING","assignments":[]},
+  {"id":"ms9","name":"Vlad Electrician","type":"ELECTRICAL","assignments":[]},
+  {"id":"ms10","name":"Roxana Curatenie","type":"CLEANING","assignments":[]}
+]

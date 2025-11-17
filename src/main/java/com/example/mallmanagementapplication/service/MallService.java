@@ -5,8 +5,10 @@ import com.example.mallmanagementapplication.repository.MallRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class MallService {
+
     private final MallRepository mallRepo;
 
     public MallService(MallRepository mallRepo) {

@@ -1,88 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Maintenance Tasks</title>
+<head><meta charset="UTF-8"><title>Tasks</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-            background-color: #fafafa;
-        }
-        h1 {
-            color: #333;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 0.75rem;
-            text-align: left;
-        }
-        th {
-            background: #f2f2f2;
-        }
-        tr:hover {
-            background: #f9f9f9;
-        }
-        button {
-            background-color: #c0392b;
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #e74c3c;
-        }
-        a.add-btn {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.6rem 1rem;
-            background-color: #27ae60;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        a.add-btn:hover {
-            background-color: #2ecc71;
-        }
-    </style>
-</head>
+        body{font-family:Arial;margin:2rem;}table{border-collapse:collapse;width:100%;}
+        th,td{border:1px solid #ccc;padding:.6rem;}th{background:#f2f2f2;}
+        a.button,button{padding:.5rem .8rem;background:#2980b9;color:white;
+            border-radius:4px;text-decoration:none;}
+        button.delete-btn{background:#c0392b;border:none;}
+    </style></head>
 <body>
+
 <h1>Maintenance Tasks</h1>
+
+<a href="/tasks/new" class="button">Add Task</a>
 
 <table>
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Assignment ID</th>
-        <th>Actions</th>
-    </tr>
+    <tr><th>Description</th><th>Status</th><th>Assignment</th><th>Actions</th></tr>
     </thead>
+
     <tbody>
     <tr th:each="t : ${tasks}">
-        <td th:text="${t.id}"></td>
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
         <td th:text="${t.assignmentId}"></td>
+
         <td>
-            <form th:action="@{'/tasks/' + ${t.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
+            <a th:href="@{/tasks/{id}(id=${t.id})}" class="button">Details</a>
+            <a th:href="@{/tasks/{id}/edit(id=${t.id})}" class="button">Edit</a>
+            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" style="display:inline">
+                <button class="delete-btn">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-
-<a href="/tasks/new" class="add-btn">Add New Task</a>
 
 </body>
 </html>

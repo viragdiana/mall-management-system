@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Purchase Details</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        .box{background:#f9f9f9;padding:1.5rem;width:350px;border-radius:6px;}
+        a.button{padding:.4rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
+    </style></head>
+<body>
+
+<h1>Purchase Details</h1>
+
+<div class="box">
+    <p><strong>Customer:</strong> <span th:text="${customer.name}"></span></p>
+    <p><strong>Shop:</strong> <span th:text="${shop.name}"></span></p>
+    <p><strong>Amount:</strong> <span th:text="${purchase.amount}"></span></p>
+</div>
+
+<a href="/purchases" class="button">← Back</a>
+
+</body>
+</html>

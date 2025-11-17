@@ -1,88 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Purchase List</title>
+<head><meta charset="UTF-8"><title>Purchases</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-            background-color: #fafafa;
-        }
-        h1 {
-            color: #333;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 0.75rem;
-            text-align: left;
-        }
-        th {
-            background: #f2f2f2;
-        }
-        tr:hover {
-            background: #f9f9f9;
-        }
-        button {
-            background-color: #c0392b;
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #e74c3c;
-        }
-        a.add-btn {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.6rem 1rem;
-            background-color: #27ae60;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        a.add-btn:hover {
-            background-color: #2ecc71;
-        }
-    </style>
-</head>
+        body{font-family:Arial;margin:2rem;}
+        table{border-collapse:collapse;width:100%;}
+        th,td{border:1px solid #ccc;padding:.6rem;}
+        th{background:#f2f2f2;}
+        a.button,button{padding:.5rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
+        button.delete-btn{background:#c0392b;border:none;}
+    </style></head>
 <body>
-<h1>Purchase List</h1>
+
+<h1>Purchases</h1>
+<a href="/purchases/new" class="button">Add Purchase</a>
 
 <table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Customer ID</th>
-        <th>Shop ID</th>
-        <th>Amount</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
+    <thead><tr><th>Customer</th><th>Shop</th><th>Amount</th><th>Actions</th></tr></thead>
     <tbody>
     <tr th:each="p : ${purchases}">
-        <td th:text="${p.id}"></td>
         <td th:text="${p.customerId}"></td>
         <td th:text="${p.shopId}"></td>
         <td th:text="${p.amount}"></td>
         <td>
-            <form th:action="@{'/purchases/' + ${p.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
+            <a th:href="@{/purchases/{id}(id=${p.id})}" class="button">Details</a>
+            <a th:href="@{/purchases/{id}/edit(id=${p.id})}" class="button">Edit</a>
+
+            <form th:action="@{/purchases/{id}/delete(id=${p.id})}" method="post" style="display:inline;">
+                <button class="delete-btn">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-
-<a href="/purchases/new" class="add-btn">Add New Purchase</a>
 
 </body>
 </html>

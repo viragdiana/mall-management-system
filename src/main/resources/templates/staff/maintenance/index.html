@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Maintenance Staff</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}table{border-collapse:collapse;width:100%;}
+        th,td{border:1px solid #ccc;padding:.6rem;}th{background:#f2f2f2;}
+        a.button,button{padding:.5rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
+        button.delete-btn{background:#c0392b;border:none;}
+    </style></head>
+<body>
+
+<h1>Maintenance Staff</h1>
+
+<a href="/maintenance-staff/new" class="button">Add Staff</a>
+
+<table>
+    <thead><tr>
+        <th>Name</th><th>Type</th><th>Actions</th>
+    </tr></thead>
+    <tbody>
+    <tr th:each="s : ${staffList}">
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.type}"></td>
+        <td>
+            <a th:href="@{/maintenance-staff/{id}(id=${s.id})}" class="button">Details</a>
+            <a th:href="@{/maintenance-staff/{id}/edit(id=${s.id})}" class="button">Edit</a>
+            <form th:action="@{/maintenance-staff/{id}/delete(id=${s.id})}" method="post" style="display:inline">
+                <button class="delete-btn">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

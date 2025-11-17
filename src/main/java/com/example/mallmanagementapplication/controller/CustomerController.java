@@ -1,13 +1,10 @@
 package com.example.mallmanagementapplication.controller;
 
-
 import com.example.mallmanagementapplication.model.Customer;
 import com.example.mallmanagementapplication.service.CustomerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/customers")
@@ -19,30 +16,57 @@ public class CustomerController {
         this.service = service;
     }
 
-    // GET /customers → show all customers
+    // LIST ALL
     @GetMapping
-    public String showAllCustomers(Model model) {
+    public String index(Model model) {
         model.addAttribute("customers", service.getAllCustomers());
-        return "customers/index"; // points to templates/customers/index.html
+        return "customers/index";
     }
 
-    // GET /customers/new → show form for adding new customer
+    // DETAILS
+    @GetMapping("/{id}")
+    public String details(@PathVariable String id, Model model) {
+        model.addAttribute("customer", service.getCustomer(id));
+        return "customers/details";
+    }
+
+    // NEW FORM
     @GetMapping("/new")
-    public String showCustomerForm(Model model) {
+    public String form(Model model) {
         model.addAttribute("customer", new Customer());
-        return "customers/form"; // templates/customers/form.html
+        return "customers/form";
     }
 
-    // POST /customers → create new customer
+    // CREATE
     @PostMapping
-    public String addCustomer(@ModelAttribute Customer customer) {
+    public String create(@ModelAttribute Customer customer) {
         service.addCustomer(customer);
-        return "redirect:/customers"; // after saving, go back to list
+        return "redirect:/customers";
     }
 
-    // POST /customers/{id}/delete → delete a customer
+    // EDIT FORM
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable String id, Model model) {
+        model.addAttribute("customer", service.getCustomer(id));
+        return "customers/edit";
+    }
+
+    // UPDATE
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable String id, @ModelAttribute Customer updated) {
+        Customer existing = service.getCustomer(id);
+
+        existing.setName(updated.getName());
+        existing.setCurrency(updated.getCurrency());
+        existing.setEmail(updated.getEmail());
+
+        service.addCustomer(existing);
+        return "redirect:/customers";
+    }
+
+    // DELETE
     @PostMapping("/{id}/delete")
-    public String deleteCustomer(@PathVariable String id) {
+    public String delete(@PathVariable String id) {
         service.deleteCustomer(id);
         return "redirect:/customers";
     }

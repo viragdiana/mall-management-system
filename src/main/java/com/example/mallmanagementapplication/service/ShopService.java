@@ -5,8 +5,12 @@ import com.example.mallmanagementapplication.repository.ShopRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.example.mallmanagementapplication.service.Validation.requireExists;
+
 @Service
 public class ShopService {
+
     private final ShopRepository shopRepo;
 
     public ShopService(ShopRepository shopRepo) {
@@ -18,7 +22,7 @@ public class ShopService {
     }
 
     public Shop getShop(String id) {
-        return shopRepo.findById(id);
+        return requireExists(shopRepo, id, "Shop");
     }
 
     public List<Shop> getAllShops() {
@@ -26,6 +30,7 @@ public class ShopService {
     }
 
     public void deleteShop(String id) {
+        requireExists(shopRepo, id, "Shop");
         shopRepo.delete(id);
     }
 }

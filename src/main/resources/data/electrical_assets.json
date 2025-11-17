@@ -1,0 +1,12 @@
+[
+  {"id":"ea1","floorId":"f1","type":"LIFT","status":"WORKING"},
+  {"id":"ea2","floorId":"f2","type":"AC","status":"WORKING"},
+  {"id":"ea3","floorId":"f3","type":"LIGHT","status":"WORKING"},
+  {"id":"ea4","floorId":"f4","type":"ESCALATOR","status":"WORKING"},
+  {"id":"ea5","floorId":"f5","type":"LIGHT","status":"DOWN"},
+  {"id":"ea6","floorId":"f6","type":"AC","status":"WORKING"},
+  {"id":"ea7","floorId":"f7","type":"LIFT","status":"DOWN"},
+  {"id":"ea8","floorId":"f8","type":"ESCALATOR","status":"WORKING"},
+  {"id":"ea9","floorId":"f9","type":"LIGHT","status":"WORKING"},
+  {"id":"ea10","floorId":"f10","type":"AC","status":"DOWN"}
+]

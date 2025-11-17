@@ -2,88 +2,63 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Customer List</title>
+    <title>Customers</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 2rem;
-            background-color: #fafafa;
-        }
-        h1 {
-            color: #333;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 0.75rem;
-            text-align: left;
-        }
-        th {
-            background: #f2f2f2;
-        }
-        tr:hover {
-            background: #f9f9f9;
-        }
-        button {
-            background-color: #c0392b;
-            color: white;
-            border: none;
+        body { font-family: Arial; margin: 2rem; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.6rem; text-align: left; }
+        th { background: #f2f2f2; }
+        a.button, button {
+            display: inline-block;
             padding: 0.4rem 0.8rem;
+            margin: 0.1rem;
+            background: #2980b9;
+            color: #fff;
+            text-decoration: none;
             border-radius: 4px;
+            border: none;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #e74c3c;
-        }
-        a.add-btn {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.6rem 1rem;
-            background-color: #27ae60;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-        a.add-btn:hover {
-            background-color: #2ecc71;
-        }
+        button.delete-btn { background: #c0392b; }
+        .top-bar { margin-bottom: 1rem; }
     </style>
 </head>
 <body>
-<h1>Customer List</h1>
+
+<h1>Customers</h1>
+
+<div class="top-bar">
+    <a href="/customers/new" class="button">Add Customer</a>
+</div>
 
 <table>
     <thead>
     <tr>
-        <th>ID</th>
         <th>Name</th>
         <th>Currency</th>
         <th>Email</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
-    <!-- Loop through all customers -->
     <tr th:each="c : ${customers}">
-        <td th:text="${c.id}"></td>
         <td th:text="${c.name}"></td>
         <td th:text="${c.currency}"></td>
         <td th:text="${c.email}"></td>
         <td>
-            <form th:action="@{'/customers/' + ${c.id} + '/delete'}" method="post">
-                <button type="submit">Delete</button>
+            <a th:href="@{/customers/{id}(id=${c.id})}" class="button">Details</a>
+            <a th:href="@{/customers/{id}/edit(id=${c.id})}" class="button">Edit</a>
+
+            <form th:action="@{/customers/{id}/delete(id=${c.id})}"
+                  method="post"
+                  style="display:inline">
+                <button class="delete-btn" type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
-
-<a href="/customers/new" class="add-btn">Add New Customer</a>
 
 </body>
 </html>

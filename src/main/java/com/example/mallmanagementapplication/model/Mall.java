@@ -8,6 +8,7 @@ import java.util.UUID;
 /**
  * Mall – conține mai multe etaje (Floor).
  */
+//punem pathu de InFind Repo in constructor
 public class Mall implements Identifiable {
     private String id;
     private String name;

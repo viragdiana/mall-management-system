@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>Asset Details</title>
+    <style>
+        body{font-family:Arial;margin:2rem;}
+        .box{background:#f9f9f9;width:350px;padding:1.5rem;border-radius:6px;}
+        p{margin:.5rem 0;}
+        a.button{padding:.4rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
+    </style></head>
+<body>
+
+<h1>Asset Details</h1>
+
+<div class="box">
+    <p><strong>Floor:</strong> <span th:text="${asset.floorId}"></span></p>
+    <p><strong>Type:</strong> <span th:text="${asset.type}"></span></p>
+    <p><strong>Status:</strong> <span th:text="${asset.status}"></span></p>
+</div>
+
+<a href="/assets" class="button">← Back</a>
+
+</body>
+</html>
