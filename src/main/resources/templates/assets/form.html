@@ -14,8 +14,14 @@
 
 <form th:action="@{/assets}" th:object="${asset}" method="post">
 
-    <label>Floor ID:</label>
-    <input th:field="*{floorId}" required>
+    <label>Floor:</label>
+    <select th:field="*{floorId}">
+        <option value="">Select Floor</option>
+        <option th:each="f : ${floors}"
+                th:value="${f.id}"
+                th:text="'Floor ' + ${f.number}">
+        </option>
+    </select>
 
     <label>Type:</label>
     <select th:field="*{type}">

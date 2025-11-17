@@ -22,8 +22,14 @@
         <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
     </select>
 
-    <label>Assignment ID (optional):</label>
-    <input th:field="*{assignmentId}">
+    <label>Assignment (optional):</label>
+    <select th:field="*{assignmentId}">
+        <option value="">-- No Assignment --</option>
+        <option th:each="a : ${assignments}"
+                th:value="${a.id}"
+                th:text="${'Assignment ' + a.id}">
+        </option>
+    </select>
 
     <button>Save</button>
 </form>

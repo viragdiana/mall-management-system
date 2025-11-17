@@ -23,7 +23,7 @@ public class MaintenanceTaskService {
     }
 
     public void addTask(MaintenanceTask task) {
-        if (task.getAssignmentId() != null) {
+        if (task.getAssignmentId() != null && !task.getAssignmentId().isBlank()) {
             requireExists(assignmentRepo, task.getAssignmentId(), "StaffAssignment");
         }
         taskRepo.save(task);

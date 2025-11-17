@@ -4,6 +4,7 @@ import com.example.mallmanagementapplication.model.ElectricalAsset;
 import com.example.mallmanagementapplication.model.ElectricalType;
 import com.example.mallmanagementapplication.model.AssetStatus;
 import com.example.mallmanagementapplication.service.ElectricalAssetService;
+import com.example.mallmanagementapplication.service.FloorService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.*;
 public class ElectricalAssetController {
 
     private final ElectricalAssetService service;
+    private final FloorService floorService;
 
-    public ElectricalAssetController(ElectricalAssetService service) {
+
+    public ElectricalAssetController(ElectricalAssetService service, FloorService floorService) {
         this.service = service;
+        this.floorService = floorService;
     }
 
     // LIST
@@ -36,6 +40,7 @@ public class ElectricalAssetController {
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("asset", new ElectricalAsset());
+        model.addAttribute("floors", floorService.getAllFloors());
         model.addAttribute("types", ElectricalType.values());
         model.addAttribute("statuses", AssetStatus.values());
         return "assets/form";
@@ -52,6 +57,7 @@ public class ElectricalAssetController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable String id, Model model) {
         model.addAttribute("asset", service.getAsset(id));
+        model.addAttribute("floors", floorService.getAllFloors());
         model.addAttribute("types", ElectricalType.values());
         model.addAttribute("statuses", AssetStatus.values());
         return "assets/edit";

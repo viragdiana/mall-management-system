@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.controller;
 import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.TaskStatus;
 import com.example.mallmanagementapplication.service.MaintenanceTaskService;
+import com.example.mallmanagementapplication.service.StaffAssignmentService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.*;
 public class MaintenanceTaskController {
 
     private final MaintenanceTaskService service;
+    private final StaffAssignmentService assignmentService;
 
-    public MaintenanceTaskController(MaintenanceTaskService service) {
+    public MaintenanceTaskController(MaintenanceTaskService service, StaffAssignmentService assignmentService) {
         this.service = service;
+        this.assignmentService = assignmentService;
     }
 
     // LIST
@@ -36,6 +39,7 @@ public class MaintenanceTaskController {
     public String form(Model model) {
         model.addAttribute("task", new MaintenanceTask());
         model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("assignments", assignmentService.getAllAssignments());
         return "tasks/form";
     }
 
@@ -51,6 +55,7 @@ public class MaintenanceTaskController {
     public String editForm(@PathVariable String id, Model model) {
         model.addAttribute("task", service.getTask(id));
         model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("assignments", assignmentService.getAllAssignments());
         return "tasks/edit";
     }
 

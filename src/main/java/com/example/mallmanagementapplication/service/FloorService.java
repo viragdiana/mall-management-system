@@ -18,6 +18,13 @@ public class FloorService {
     }
 
     public void addFloor(Floor floor) {
+        boolean exists = floorRepo.findAll().stream()
+                .anyMatch(f -> f.getNumber() == floor.getNumber());
+
+        if (exists) {
+            throw new IllegalArgumentException("A floor with number " + floor.getNumber() + " already exists.");
+        }
+
         floorRepo.save(floor);
     }
 
