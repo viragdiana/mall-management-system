@@ -1,49 +1,39 @@
 package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.ElectricalAsset;
-import com.example.mallmanagementapplication.model.AssetStatus;
 import com.example.mallmanagementapplication.repository.ElectricalAssetRepository;
-import com.example.mallmanagementapplication.repository.FloorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.mallmanagementapplication.service.Validation.requireExists;
-
 @Service
 public class ElectricalAssetService {
 
-    private final ElectricalAssetRepository assetRepo;
-    private final FloorRepository floorRepo;
+    private final ElectricalAssetRepository repo;
 
-    public ElectricalAssetService(ElectricalAssetRepository assetRepo, FloorRepository floorRepo) {
-        this.assetRepo = assetRepo;
-        this.floorRepo = floorRepo;
+    public ElectricalAssetService(ElectricalAssetRepository repo) {
+        this.repo = repo;
     }
 
-    public void addAsset(ElectricalAsset asset) {
-        if (asset.getFloorId() != null) {
-            requireExists(floorRepo, asset.getFloorId(), "Floor");
-        }
-        assetRepo.save(asset);
+    public List<ElectricalAsset> getAll() {
+        return repo.findAll();
     }
 
-    public ElectricalAsset getAsset(String id) {
-        return requireExists(assetRepo, id, "Asset");
+    public ElectricalAsset getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Electrical asset not found: " + id));
     }
 
-    public List<ElectricalAsset> getAllAssets() {
-        return assetRepo.findAll();
+    public ElectricalAsset save(ElectricalAsset asset) {
+        return repo.save(asset);
     }
 
-    public void deleteAsset(String id) {
-        requireExists(assetRepo, id, "Asset");
-        assetRepo.delete(id);
-    }
+    public void delete(Long id) {
+        if (!repo.existsById(id))
+            throw new EntityNotFoundException("Electrical asset not found: " + id);
 
-    public List<ElectricalAsset> getAssetsByStatus(AssetStatus status) {
-        return assetRepo.findAll().stream()
-                .filter(a -> a.getStatus() == status)
-                .toList();
+        repo.deleteById(id);
     }
 }

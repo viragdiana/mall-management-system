@@ -2,11 +2,11 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.SecurityStaff;
 import com.example.mallmanagementapplication.repository.SecurityStaffRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
-import static com.example.mallmanagementapplication.service.Validation.requireExists;
 
 @Service
 public class SecurityStaffService {
@@ -17,20 +17,23 @@ public class SecurityStaffService {
         this.repo = repo;
     }
 
-    public void add(SecurityStaff staff) {
-        repo.save(staff);
-    }
-
     public List<SecurityStaff> getAll() {
         return repo.findAll();
     }
 
-    public SecurityStaff get(String id) {
-        return requireExists(repo, id, "SecurityStaff");
+    public SecurityStaff getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Security staff not found: " + id));
     }
 
-    public void delete(String id) {
-        requireExists(repo, id, "SecurityStaff");
-        repo.delete(id);
+    public SecurityStaff save(SecurityStaff staff) {
+        return repo.save(staff);
+    }
+
+    public void delete(Long id) {
+        if (!repo.existsById(id))
+            throw new EntityNotFoundException("Security staff not found: " + id);
+
+        repo.deleteById(id);
     }
 }

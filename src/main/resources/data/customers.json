@@ -23,12 +23,6 @@
   "purchases" : [ ],
   "email" : "ana@example.com"
 }, {
-  "id" : "c6",
-  "name" : "Bogdan Matei",
-  "currency" : "RON",
-  "purchases" : [ ],
-  "email" : "bogdan@example.com"
-}, {
   "id" : "c7",
   "name" : "Julia Novak",
   "currency" : "EUR",

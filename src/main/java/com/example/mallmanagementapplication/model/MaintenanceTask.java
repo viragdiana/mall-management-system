@@ -1,47 +1,51 @@
 package com.example.mallmanagementapplication.model;
 
-import com.example.mallmanagementapplication.model.TaskStatus;
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-/**
- * Task de mentenanță, legat opțional de o asignare de personal (assignmentId).
- */
+@Entity
+@Table(name = "maintenance_tasks")
 public class MaintenanceTask implements Identifiable {
-    private String id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Size(min = 3, max = 255)
     private String description;
-    private TaskStatus status; // PLANNED, ACTIVE, DONE
-    private String assignmentId; // poate fi null
 
-    public MaintenanceTask() { this.id = UUID.randomUUID().toString();}
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private TaskStatus status;
 
-    public MaintenanceTask(/*String id,*/ String description, TaskStatus status) {
-        this();
+    @ManyToOne
+    @JoinColumn(name = "assignment_id")
+    private StaffAssignment assignment;
+
+    public MaintenanceTask() {}
+
+    public MaintenanceTask(String description, TaskStatus status) {
         this.description = description;
         this.status = status;
     }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+
+    public void setId(Long id) { this.id = id; }
 
     public String getDescription() { return description; }
+
     public void setDescription(String description) { this.description = description; }
 
     public TaskStatus getStatus() { return status; }
+
     public void setStatus(TaskStatus status) { this.status = status; }
 
-    public String getAssignmentId() { return assignmentId; }
-    public void setAssignmentId(String assignmentId) { this.assignmentId = assignmentId; }
+    public StaffAssignment getAssignment() { return assignment; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MaintenanceTask)) return false;
-        MaintenanceTask that = (MaintenanceTask) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public void setAssignment(StaffAssignment assignment) { this.assignment = assignment; }
 }

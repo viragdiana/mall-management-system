@@ -16,58 +16,51 @@ public class CustomerController {
         this.service = service;
     }
 
-    // LIST ALL
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("customers", service.getAllCustomers());
+        model.addAttribute("customers", service.getAll());
         return "customers/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("customer", service.getCustomer(id));
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("customer", service.getById(id));
         return "customers/details";
     }
 
-    // NEW FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("customer", new Customer());
         return "customers/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute Customer customer) {
-        service.addCustomer(customer);
+        service.save(customer);
         return "redirect:/customers";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("customer", service.getCustomer(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("customer", service.getById(id));
         return "customers/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute Customer updated) {
-        Customer existing = service.getCustomer(id);
+    public String update(@PathVariable Long id, @ModelAttribute Customer updated) {
+        Customer existing = service.getById(id);
 
         existing.setName(updated.getName());
-        existing.setCurrency(updated.getCurrency());
         existing.setEmail(updated.getEmail());
+        existing.setCurrency(updated.getCurrency());
 
-        service.addCustomer(existing);
+        service.save(existing);
         return "redirect:/customers";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.deleteCustomer(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/customers";
     }
 }

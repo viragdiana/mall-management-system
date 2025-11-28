@@ -15,67 +15,61 @@ public class MaintenanceTaskController {
     private final MaintenanceTaskService service;
     private final StaffAssignmentService assignmentService;
 
-    public MaintenanceTaskController(MaintenanceTaskService service, StaffAssignmentService assignmentService) {
+    public MaintenanceTaskController(MaintenanceTaskService service,
+                                     StaffAssignmentService assignmentService) {
         this.service = service;
         this.assignmentService = assignmentService;
     }
 
-    // LIST
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("tasks", service.getAllTasks());
+        model.addAttribute("tasks", service.getAll());
         return "tasks/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("task", service.getTask(id));
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("task", service.getById(id));
         return "tasks/details";
     }
 
-    // FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("task", new MaintenanceTask());
         model.addAttribute("statuses", TaskStatus.values());
-        model.addAttribute("assignments", assignmentService.getAllAssignments());
+        model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute MaintenanceTask task) {
-        service.addTask(task);
+        service.save(task);
         return "redirect:/tasks";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("task", service.getTask(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("task", service.getById(id));
         model.addAttribute("statuses", TaskStatus.values());
-        model.addAttribute("assignments", assignmentService.getAllAssignments());
+        model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute MaintenanceTask updated) {
-        MaintenanceTask existing = service.getTask(id);
+    public String update(@PathVariable Long id, @ModelAttribute MaintenanceTask updated) {
+        MaintenanceTask existing = service.getById(id);
 
         existing.setDescription(updated.getDescription());
         existing.setStatus(updated.getStatus());
-        existing.setAssignmentId(updated.getAssignmentId());
+        existing.setAssignment(updated.getAssignment());
 
-        service.addTask(existing);
+        service.save(existing);
         return "redirect:/tasks";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.deleteTask(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/tasks";
     }
 }

@@ -16,54 +16,47 @@ public class FloorController {
         this.service = service;
     }
 
-    // LIST
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("floors", service.getAllFloors());
+        model.addAttribute("floors", service.getAll());
         return "floors/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("floor", service.getFloor(id));
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("floor", service.getById(id));
         return "floors/details";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("floor", new Floor());
         return "floors/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute Floor floor) {
-        service.addFloor(floor);
+        service.save(floor);
         return "redirect:/floors";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("floor", service.getFloor(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("floor", service.getById(id));
         return "floors/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute Floor updated) {
-        Floor existing = service.getFloor(id);
-        existing.setNumber(updated.getNumber());
-        service.addFloor(existing);
+    public String update(@PathVariable Long id, @ModelAttribute Floor updated) {
+        Floor existing = service.getById(id);
+        existing.setLevel(updated.getLevel());
+        service.save(existing);
         return "redirect:/floors";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.deleteFloor(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/floors";
     }
 }

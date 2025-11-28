@@ -14,7 +14,7 @@
 
 <form th:action="@{/floors}" th:object="${floor}" method="post">
     <label>Floor Number:</label>
-    <input th:field="*{number}" type="number" required>
+    <input th:field="*{level}" type="number" required>
     <button>Save</button>
 </form>
 

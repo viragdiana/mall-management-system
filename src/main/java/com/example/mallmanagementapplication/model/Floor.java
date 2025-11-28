@@ -1,55 +1,70 @@
 package com.example.mallmanagementapplication.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
-/**
- * Etajul dintr-un Mall, care conține magazine, sarcini, echipamente electrice și asignări de personal.
- */
+@Entity
+@Table(name = "floors")
 public class Floor implements Identifiable {
-    private String id;
-    private int number;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @PositiveOrZero
+    private Integer level;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "mall_id")
+    private Mall mall;
+
+    @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shops = new ArrayList<>();
-    private List<MaintenanceTask> tasks = new ArrayList<>();
-    private List<ElectricalAsset> electricals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ElectricalAsset> electricalAssets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StaffAssignment> assignments = new ArrayList<>();
 
-    public Floor() {
-        this.id = UUID.randomUUID().toString();
-    }
+    public Floor() {}
 
-    public Floor(/*String id,*/ int number) {
-        this();
-        this.number = number;
+    public Floor(Integer level, Mall mall) {
+        this.level = level;
+        this.mall = mall;
     }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
 
-    public int getNumber() { return number; }
-    public void setNumber(int number) { this.number = number; }
+    public void setId(Long id) { this.id = id; }
+
+    public Integer getLevel() { return level; }
+
+    public void setLevel(Integer level) { this.level = level; }
+
+    public Mall getMall() { return mall; }
+
+    public void setMall(Mall mall) { this.mall = mall; }
 
     public List<Shop> getShops() { return shops; }
-    public List<MaintenanceTask> getTasks() { return tasks; }
-    public List<ElectricalAsset> getElectricals() { return electricals; }
-    public List<StaffAssignment> getAssignments() { return assignments; }
 
-    public void addShop(Shop s) { if (s != null) shops.add(s); }
-    public void addTask(MaintenanceTask t) { if (t != null) tasks.add(t); }
-    public void addElectrical(ElectricalAsset e) { if (e != null) electricals.add(e); }
-    public void addAssignment(StaffAssignment a) { if (a != null) assignments.add(a); }
+    public void setShops(List<Shop> shops) { this.shops = shops; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Floor)) return false;
-        Floor floor = (Floor) o;
-        return Objects.equals(id, floor.id);
+    public List<ElectricalAsset> getElectricalAssets() { return electricalAssets; }
+
+    public void setElectricalAssets(List<ElectricalAsset> electricalAssets) {
+        this.electricalAssets = electricalAssets;
     }
 
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public List<StaffAssignment> getAssignments() { return assignments; }
+
+    public void setAssignments(List<StaffAssignment> assignments) {
+        this.assignments = assignments;
+    }
 }

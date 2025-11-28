@@ -1,37 +1,42 @@
 package com.example.mallmanagementapplication.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-/**
- * Clasă abstractă pentru toți angajații.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "staff")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Staff implements Identifiable {
-    private String id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
+    @Size(min = 2, max = 100)
     private String name;
 
-    protected Staff() {this.id = UUID.randomUUID().toString(); }
+    @OneToMany(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StaffAssignment> assignments = new ArrayList<>();
 
-    protected Staff(/*String id,*/ String name) {
-        this();
-        this.name = name;
-    }
+    public Staff() {}
+
+    public Staff(String name) { this.name = name; }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
+
     public void setName(String name) { this.name = name; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Staff)) return false;
-        Staff staff = (Staff) o;
-        return Objects.equals(id, staff.id);
-    }
+    public List<StaffAssignment> getAssignments() { return assignments; }
 
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public void setAssignments(List<StaffAssignment> assignments) { this.assignments = assignments; }
 }

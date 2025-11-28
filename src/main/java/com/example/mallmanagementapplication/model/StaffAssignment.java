@@ -1,48 +1,60 @@
 package com.example.mallmanagementapplication.model;
 
-import com.example.mallmanagementapplication.model.Shift;
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
-/*
- * Asociază un angajat (Staff) cu un etaj (Floor) într-un anumit schimb.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "staff_assignments")
 public class StaffAssignment implements Identifiable {
-    private String id;
-    private String floorId;
-    private String staffId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "floor_id")
+    private Floor floor;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "staff_id")
+    private Staff staff;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private Shift shift;
 
-    public StaffAssignment() { this.id = UUID.randomUUID().toString();}
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MaintenanceTask> tasks = new ArrayList<>();
 
-    public StaffAssignment(/*String id,*/ String floorId, String staffId, Shift shift) {
-        this();
-        this.floorId = floorId;
-        this.staffId = staffId;
+    public StaffAssignment() {}
+
+    public StaffAssignment(Floor floor, Staff staff, Shift shift) {
+        this.floor = floor;
+        this.staff = staff;
         this.shift = shift;
     }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
 
-    public String getFloorId() { return floorId; }
-    public void setFloorId(String floorId) { this.floorId = floorId; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getStaffId() { return staffId; }
-    public void setStaffId(String staffId) { this.staffId = staffId; }
+    public Floor getFloor() { return floor; }
+
+    public void setFloor(Floor floor) { this.floor = floor; }
+
+    public Staff getStaff() { return staff; }
+
+    public void setStaff(Staff staff) { this.staff = staff; }
 
     public Shift getShift() { return shift; }
+
     public void setShift(Shift shift) { this.shift = shift; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StaffAssignment)) return false;
-        StaffAssignment that = (StaffAssignment) o;
-        return Objects.equals(id, that.id);
-    }
+    public List<MaintenanceTask> getTasks() { return tasks; }
 
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public void setTasks(List<MaintenanceTask> tasks) { this.tasks = tasks; }
 }

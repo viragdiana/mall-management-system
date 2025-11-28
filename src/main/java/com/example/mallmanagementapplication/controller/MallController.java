@@ -16,58 +16,51 @@ public class MallController {
         this.service = service;
     }
 
-    // LIST
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("malls", service.getAllMalls());
+        model.addAttribute("malls", service.getAll());
         return "malls/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("mall", service.getMall(id));
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("mall", service.getById(id));
         return "malls/details";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("mall", new Mall());
         return "malls/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute Mall mall) {
-        service.addMall(mall);
+        service.save(mall);
         return "redirect:/malls";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("mall", service.getMall(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("mall", service.getById(id));
         return "malls/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute Mall updated) {
-        Mall existing = service.getMall(id);
+    public String update(@PathVariable Long id, @ModelAttribute Mall updated) {
+        Mall existing = service.getById(id);
 
         existing.setName(updated.getName());
         existing.setCity(updated.getCity());
         existing.setCountry(updated.getCountry());
 
-        service.addMall(existing);
+        service.save(existing);
         return "redirect:/malls";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.deleteMall(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/malls";
     }
 }

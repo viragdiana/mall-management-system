@@ -2,42 +2,44 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.repository.FloorRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.mallmanagementapplication.service.Validation.requireExists;
-
 @Service
 public class FloorService {
 
-    private final FloorRepository floorRepo;
+    private final FloorRepository repo;
 
-    public FloorService(FloorRepository floorRepo) {
-        this.floorRepo = floorRepo;
+    public FloorService(FloorRepository repo) {
+        this.repo = repo;
     }
 
-    public void addFloor(Floor floor) {
-        boolean exists = floorRepo.findAll().stream()
-                .anyMatch(f -> f.getNumber() == floor.getNumber());
+    public List<Floor> getAll() {
+        return repo.findAll();
+    }
 
-        if (exists) {
-            throw new IllegalArgumentException("A floor with number " + floor.getNumber() + " already exists.");
+    public Floor getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Floor not found: " + id));
+    }
+
+    public Floor save(Floor floor) {
+
+        // Business validation: a mall cannot have two floors with the same number
+        if (repo.existsByLevelAndMallId(floor.getLevel(), floor.getMall().getId())) {
+            throw new IllegalStateException("A floor with this level already exists in this mall!");
         }
 
-        floorRepo.save(floor);
+        return repo.save(floor);
     }
 
-    public Floor getFloor(String id) {
-        return requireExists(floorRepo, id, "Floor");
-    }
-
-    public List<Floor> getAllFloors() {
-        return floorRepo.findAll();
-    }
-
-    public void deleteFloor(String id) {
-        requireExists(floorRepo, id, "Floor");
-        floorRepo.delete(id);
+    public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new EntityNotFoundException("Floor not found: " + id);
+        }
+        repo.deleteById(id);
     }
 }

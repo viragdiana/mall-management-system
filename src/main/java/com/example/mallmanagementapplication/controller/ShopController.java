@@ -17,21 +17,18 @@ public class ShopController {
         this.service = service;
     }
 
-    // LIST ALL
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("shops", service.getAllShops());
+        model.addAttribute("shops", service.getAll());
         return "shops/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("shop", service.getShop(id));
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("shop", service.getById(id));
         return "shops/details";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("shop", new Shop());
@@ -39,39 +36,35 @@ public class ShopController {
         return "shops/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute Shop shop) {
-        service.addShop(shop);
+        service.save(shop);
         return "redirect:/shops";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("shop", service.getShop(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("shop", service.getById(id));
         model.addAttribute("types", ShopType.values());
         return "shops/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute Shop updated) {
-        Shop existing = service.getShop(id);
+    public String update(@PathVariable Long id, @ModelAttribute Shop updated) {
+        Shop existing = service.getById(id);
 
         existing.setName(updated.getName());
         existing.setOwnerName(updated.getOwnerName());
         existing.setAreaSqm(updated.getAreaSqm());
         existing.setType(updated.getType());
 
-        service.addShop(existing);
+        service.save(existing);
         return "redirect:/shops";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.deleteShop(id);
+    public String delete(@PathVariable Long id) {
+        service.delete(id);
         return "redirect:/shops";
     }
 }

@@ -1,50 +1,44 @@
 package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.MaintenanceTask;
-import com.example.mallmanagementapplication.model.TaskStatus;
 import com.example.mallmanagementapplication.repository.MaintenanceTaskRepository;
-import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.example.mallmanagementapplication.service.Validation.requireExists;
-
 @Service
 public class MaintenanceTaskService {
 
-    private final MaintenanceTaskRepository taskRepo;
-    private final StaffAssignmentRepository assignmentRepo;
+    private final MaintenanceTaskRepository repo;
 
-    public MaintenanceTaskService(MaintenanceTaskRepository taskRepo,
-                                  StaffAssignmentRepository assignmentRepo) {
-        this.taskRepo = taskRepo;
-        this.assignmentRepo = assignmentRepo;
+    public MaintenanceTaskService(MaintenanceTaskRepository repo) {
+        this.repo = repo;
     }
 
-    public void addTask(MaintenanceTask task) {
-        if (task.getAssignmentId() != null && !task.getAssignmentId().isBlank()) {
-            requireExists(assignmentRepo, task.getAssignmentId(), "StaffAssignment");
+    public List<MaintenanceTask> getAll() {
+        return repo.findAll();
+    }
+
+    public MaintenanceTask getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found: " + id));
+    }
+
+    public MaintenanceTask save(MaintenanceTask task) {
+
+        if (task.getDescription() == null || task.getDescription().isBlank()) {
+            throw new IllegalStateException("Task description cannot be empty");
         }
-        taskRepo.save(task);
+
+        return repo.save(task);
     }
 
-    public MaintenanceTask getTask(String id) {
-        return requireExists(taskRepo, id, "Task");
-    }
+    public void delete(Long id) {
+        if (!repo.existsById(id))
+            throw new EntityNotFoundException("Task not found: " + id);
 
-    public List<MaintenanceTask> getAllTasks() {
-        return taskRepo.findAll();
-    }
-
-    public void deleteTask(String id) {
-        requireExists(taskRepo, id, "Task");
-        taskRepo.delete(id);
-    }
-
-    public List<MaintenanceTask> getTasksByStatus(TaskStatus status) {
-        return taskRepo.findAll().stream()
-                .filter(t -> t.getStatus() == status)
-                .toList();
+        repo.deleteById(id);
     }
 }

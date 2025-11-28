@@ -17,58 +17,51 @@ public class MaintenanceStaffController {
         this.service = service;
     }
 
-    // LIST
     @GetMapping
     public String index(Model model) {
         model.addAttribute("staffList", service.getAll());
-        return "staff/maintenance/index";
+        return "maintenance/staff/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("staff", service.get(id));
-        return "staff/maintenance/details";
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("staff", service.getById(id));
+        return "maintenance/staff/details";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("staff", new MaintenanceStaff());
         model.addAttribute("types", MaintenanceType.values());
-        return "staff/maintenance/form";
+        return "maintenance/staff/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute MaintenanceStaff staff) {
-        service.add(staff);
+        service.save(staff);
         return "redirect:/maintenance-staff";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("staff", service.get(id));
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("staff", service.getById(id));
         model.addAttribute("types", MaintenanceType.values());
-        return "staff/maintenance/edit";
+        return "maintenance/staff/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute MaintenanceStaff updated) {
-        MaintenanceStaff existing = service.get(id);
+    public String update(@PathVariable Long id, @ModelAttribute MaintenanceStaff updated) {
 
+        MaintenanceStaff existing = service.getById(id);
         existing.setName(updated.getName());
         existing.setType(updated.getType());
 
-        service.add(existing);
+        service.save(existing);
         return "redirect:/maintenance-staff";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
+    public String delete(@PathVariable Long id) {
         service.delete(id);
         return "redirect:/maintenance-staff";
     }

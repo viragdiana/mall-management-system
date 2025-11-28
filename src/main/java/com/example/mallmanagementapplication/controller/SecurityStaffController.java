@@ -16,56 +16,49 @@ public class SecurityStaffController {
         this.service = service;
     }
 
-    // LIST
     @GetMapping
     public String index(Model model) {
         model.addAttribute("staffList", service.getAll());
-        return "staff/security/index";
+        return "security/index";
     }
 
-    // DETAILS
     @GetMapping("/{id}")
-    public String details(@PathVariable String id, Model model) {
-        model.addAttribute("staff", service.get(id));
-        return "staff/security/details";
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("staff", service.getById(id));
+        return "security/details";
     }
 
-    // CREATE FORM
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("staff", new SecurityStaff());
-        return "staff/security/form";
+        return "security/form";
     }
 
-    // CREATE
     @PostMapping
     public String create(@ModelAttribute SecurityStaff staff) {
-        service.add(staff);
+        service.save(staff);
         return "redirect:/security-staff";
     }
 
-    // EDIT FORM
     @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable String id, Model model) {
-        model.addAttribute("staff", service.get(id));
-        return "staff/security/edit";
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("staff", service.getById(id));
+        return "security/edit";
     }
 
-    // UPDATE
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable String id, @ModelAttribute SecurityStaff updated) {
-        SecurityStaff existing = service.get(id);
+    public String update(@PathVariable Long id, @ModelAttribute SecurityStaff updated) {
+        SecurityStaff existing = service.getById(id);
 
         existing.setName(updated.getName());
         existing.setBadgeNo(updated.getBadgeNo());
 
-        service.add(existing);
+        service.save(existing);
         return "redirect:/security-staff";
     }
 
-    // DELETE
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
+    public String delete(@PathVariable Long id) {
         service.delete(id);
         return "redirect:/security-staff";
     }

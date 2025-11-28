@@ -1,53 +1,59 @@
 package com.example.mallmanagementapplication.model;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
+@Entity
+@Table(name = "customers")
 public class Customer implements Identifiable {
-    private String id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String currency;
-    private List<Purchase> purchases = new ArrayList<>();
+
+    @Email
+    @NotBlank
     private String email;
 
-    public Customer() {
-        this.id = UUID.randomUUID().toString(); // generate unique ID automatically
-    }
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Purchase> purchases = new ArrayList<>();
 
-    public Customer(/*String id,*/ String name, String currency, String email) {
-        this();
+    public Customer() {}
+
+    public Customer(String name, String currency, String email) {
         this.name = name;
         this.currency = currency;
         this.email = email;
     }
 
-
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
+
+    public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
+
     public void setName(String name) { this.name = name; }
 
     public String getCurrency() { return currency; }
+
     public void setCurrency(String currency) { this.currency = currency; }
 
-    public List<Purchase> getPurchases() { return purchases; }
-    public void addPurchase(Purchase p) { if (p != null) purchases.add(p); }
-
     public String getEmail() { return email; }
-    public void setEmail(String email) {this.email = email;}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Customer)) return false;
-        Customer that = (Customer) o;
-        return Objects.equals(id, that.id);
-    }
+    public void setEmail(String email) { this.email = email; }
 
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public List<Purchase> getPurchases() { return purchases; }
+
+    public void setPurchases(List<Purchase> purchases) { this.purchases = purchases; }
 }

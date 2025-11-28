@@ -1,12 +1,19 @@
 package com.example.mallmanagementapplication.repository;
 
 import com.example.mallmanagementapplication.model.Mall;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class MallRepository extends InFileRepository<Mall> {
+/*
+ * save(entity)
+ * findById(id)
+ * findAll()
+ * deleteById(id)
+ * delete(entity)
+ * count()
+ * existsById(id)
+ */
 
-    public MallRepository() {
-        super("src/main/resources/data/malls.json", Mall.class);
-    }
+@Repository
+public interface MallRepository extends JpaRepository<Mall, Long> {
 }

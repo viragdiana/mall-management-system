@@ -1,12 +1,10 @@
 package com.example.mallmanagementapplication.repository;
 
 import com.example.mallmanagementapplication.model.Shop;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ShopRepository extends InFileRepository<Shop> {
-
-    public ShopRepository() {
-        super("src/main/resources/data/shops.json", Shop.class);
-    }
+public interface ShopRepository extends JpaRepository<Shop, Long> {
+    boolean existsByNameAndFloorId(String name, Long floorId);
 }

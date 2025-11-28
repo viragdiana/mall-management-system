@@ -1,44 +1,51 @@
 package com.example.mallmanagementapplication.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "purchases")
 public class Purchase implements Identifiable {
-    private String id;
-    private String customerId;
-    private String shopId;
-    private double amount;
 
-    public Purchase() { this.id = UUID.randomUUID().toString();}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Purchase(/*String id,*/ String customerId, String shopId, double amount) {
-        this();
-        this.customerId = customerId;
-        this.shopId = shopId;
+    @Positive
+    private BigDecimal amount;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "shop_id")
+    private Shop shop;
+
+    public Purchase() {}
+
+    public Purchase(BigDecimal amount, Customer customer, Shop shop) {
         this.amount = amount;
+        this.customer = customer;
+        this.shop = shop;
     }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
 
-    public String getCustomerId() { return customerId; }
-    public void setCustomerId(String customerId) { this.customerId = customerId; }
+    public void setId(Long id) { this.id = id; }
 
-    public String getShopId() { return shopId; }
-    public void setShopId(String shopId) { this.shopId = shopId; }
+    public BigDecimal getAmount() { return amount; }
 
-    public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Purchase)) return false;
-        Purchase that = (Purchase) o;
-        return Objects.equals(id, that.id);
-    }
+    public Customer getCustomer() { return customer; }
 
-    @Override
-    public int hashCode() { return Objects.hash(id); }
+    public void setCustomer(Customer customer) { this.customer = customer; }
+
+    public Shop getShop() { return shop; }
+
+    public void setShop(Shop shop) { this.shop = shop; }
 }

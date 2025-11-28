@@ -1,51 +1,50 @@
 package com.example.mallmanagementapplication.model;
 
-import com.example.mallmanagementapplication.model.AssetStatus;
-import com.example.mallmanagementapplication.model.ElectricalType;
-import java.util.Objects;
-import java.util.UUID;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
-/**
- * Reprezintă echipamente electrice de pe un etaj (lift, AC, lumini etc.).
- */
+@Entity
+@Table(name = "electrical_assets")
 public class ElectricalAsset implements Identifiable {
-    private String id;
-    private String floorId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "floor_id")
+    private Floor floor;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private ElectricalType type;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private AssetStatus status;
 
-    public ElectricalAsset() {
-        this.id = UUID.randomUUID().toString();
-    }
+    public ElectricalAsset() {}
 
-    public ElectricalAsset(/*String id,*/ String floorId, ElectricalType type, AssetStatus status) {
-        this();
-        this.floorId = floorId;
+    public ElectricalAsset(Floor floor, ElectricalType type, AssetStatus status) {
+        this.floor = floor;
         this.type = type;
         this.status = status;
     }
 
     @Override
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Long getId() { return id; }
 
-    public String getFloorId() { return floorId; }
-    public void setFloorId(String floorId) { this.floorId = floorId; }
+    public void setId(Long id) { this.id = id; }
+
+    public Floor getFloor() { return floor; }
+
+    public void setFloor(Floor floor) { this.floor = floor; }
 
     public ElectricalType getType() { return type; }
+
     public void setType(ElectricalType type) { this.type = type; }
 
     public AssetStatus getStatus() { return status; }
+
     public void setStatus(AssetStatus status) { this.status = status; }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ElectricalAsset)) return false;
-        ElectricalAsset that = (ElectricalAsset) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() { return Objects.hash(id); }
 }

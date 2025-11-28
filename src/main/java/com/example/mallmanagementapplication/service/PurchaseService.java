@@ -1,49 +1,45 @@
 package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Purchase;
-import com.example.mallmanagementapplication.model.Customer;
-import com.example.mallmanagementapplication.model.Shop;
-import com.example.mallmanagementapplication.repository.CustomerRepository;
-import com.example.mallmanagementapplication.repository.ShopRepository;
 import com.example.mallmanagementapplication.repository.PurchaseRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-
-import static com.example.mallmanagementapplication.service.Validation.requireExists;
 
 @Service
 public class PurchaseService {
 
-    private final PurchaseRepository purchaseRepo;
-    private final CustomerRepository customerRepo;
-    private final ShopRepository shopRepo;
+    private final PurchaseRepository repo;
 
-    public PurchaseService(PurchaseRepository purchaseRepo,
-                           CustomerRepository customerRepo,
-                           ShopRepository shopRepo) {
-        this.purchaseRepo = purchaseRepo;
-        this.customerRepo = customerRepo;
-        this.shopRepo = shopRepo;
+    public PurchaseService(PurchaseRepository repo) {
+        this.repo = repo;
     }
 
-    public void createPurchase(Purchase purchase) {
-        requireExists(customerRepo, purchase.getCustomerId(), "Customer");
-        requireExists(shopRepo, purchase.getShopId(), "Shop");
-
-        purchaseRepo.save(purchase);
+    public List<Purchase> getAll() {
+        return repo.findAll();
     }
 
-    public Purchase getPurchase(String id) {
-        return requireExists(purchaseRepo, id, "Purchase");
+    public Purchase getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Purchase not found: " + id));
     }
 
-    public List<Purchase> getAllPurchases() {
-        return purchaseRepo.findAll();
+    public Purchase save(Purchase purchase) {
+
+        if (purchase.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalStateException("Amount must be positive!");
+        }
+
+        return repo.save(purchase);
     }
 
-    public void deletePurchase(String id) {
-        requireExists(purchaseRepo, id, "Purchase");
-        purchaseRepo.delete(id);
+    public void delete(Long id) {
+        if (!repo.existsById(id))
+            throw new EntityNotFoundException("Purchase not found: " + id);
+
+        repo.deleteById(id);
     }
 }

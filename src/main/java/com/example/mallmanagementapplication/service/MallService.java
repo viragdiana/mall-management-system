@@ -2,6 +2,8 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Mall;
 import com.example.mallmanagementapplication.repository.MallRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,25 +11,29 @@ import java.util.List;
 @Service
 public class MallService {
 
-    private final MallRepository mallRepo;
+    private final MallRepository repo;
 
-    public MallService(MallRepository mallRepo) {
-        this.mallRepo = mallRepo;
+    public MallService(MallRepository repo) {
+        this.repo = repo;
     }
 
-    public void addMall(Mall mall) {
-        mallRepo.save(mall);
+    public List<Mall> getAll() {
+        return repo.findAll();
     }
 
-    public Mall getMall(String id) {
-        return mallRepo.findById(id);
+    public Mall getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Mall not found: " + id));
     }
 
-    public List<Mall> getAllMalls() {
-        return mallRepo.findAll();
+    public Mall save(Mall mall) {
+        return repo.save(mall);
     }
 
-    public void deleteMall(String id) {
-        mallRepo.delete(id);
+    public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new EntityNotFoundException("Mall not found: " + id);
+        }
+        repo.deleteById(id);
     }
 }
