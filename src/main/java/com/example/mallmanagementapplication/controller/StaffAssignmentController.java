@@ -1,10 +1,15 @@
 package com.example.mallmanagementapplication.controller;
 
-import com.example.mallmanagementapplication.model.StaffAssignment;
 import com.example.mallmanagementapplication.model.Shift;
-import com.example.mallmanagementapplication.service.*;
+import com.example.mallmanagementapplication.model.StaffAssignment;
+import com.example.mallmanagementapplication.service.FloorService;
+import com.example.mallmanagementapplication.service.MaintenanceStaffService;
+import com.example.mallmanagementapplication.service.SecurityStaffService;
+import com.example.mallmanagementapplication.service.StaffAssignmentService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,12 +21,10 @@ public class StaffAssignmentController {
     private final MaintenanceStaffService maintenanceService;
     private final SecurityStaffService securityService;
 
-    public StaffAssignmentController(
-            StaffAssignmentService service,
-            FloorService floorService,
-            MaintenanceStaffService maintenanceService,
-            SecurityStaffService securityService) {
-
+    public StaffAssignmentController(StaffAssignmentService service,
+                                     FloorService floorService,
+                                     MaintenanceStaffService maintenanceService,
+                                     SecurityStaffService securityService) {
         this.service = service;
         this.floorService = floorService;
         this.maintenanceService = maintenanceService;
@@ -41,17 +44,29 @@ public class StaffAssignmentController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("assignment", new StaffAssignment());
         model.addAttribute("floors", floorService.getAll());
         model.addAttribute("maintenanceStaff", maintenanceService.getAll());
         model.addAttribute("securityStaff", securityService.getAll());
         model.addAttribute("shifts", Shift.values());
-        return "assignments/form";
+        return "assignments/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute StaffAssignment assignment) {
+    public String create(
+            @Valid @ModelAttribute("assignment") StaffAssignment assignment,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("floors", floorService.getAll());
+            model.addAttribute("maintenanceStaff", maintenanceService.getAll());
+            model.addAttribute("securityStaff", securityService.getAll());
+            model.addAttribute("shifts", Shift.values());
+            return "assignments/new";
+        }
+
         service.save(assignment);
         return "redirect:/assignments";
     }
@@ -67,12 +82,24 @@ public class StaffAssignmentController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute StaffAssignment updated) {
-        StaffAssignment existing = service.getById(id);
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("assignment") StaffAssignment updated,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("floors", floorService.getAll());
+            model.addAttribute("maintenanceStaff", maintenanceService.getAll());
+            model.addAttribute("securityStaff", securityService.getAll());
+            model.addAttribute("shifts", Shift.values());
+            return "assignments/edit";
+        }
 
-        existing.setShift(updated.getShift());
-        existing.setStaff(updated.getStaff());
+        StaffAssignment existing = service.getById(id);
         existing.setFloor(updated.getFloor());
+        existing.setStaff(updated.getStaff());
+        existing.setShift(updated.getShift());
 
         service.save(existing);
         return "redirect:/assignments";

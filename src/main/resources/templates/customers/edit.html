@@ -10,24 +10,30 @@
         input { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
         button { margin-top: 1rem; padding: 0.6rem; background: #2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
         a { margin-top:1rem; display:block; }
+        .error { color:#c0392b; font-size:0.9rem; }
     </style>
 </head>
 <body>
 
 <h1>Edit Customer</h1>
 
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
 <form th:action="@{/customers/{id}/edit(id=${customer.id})}"
       th:object="${customer}"
       method="post">
 
     <label>Name:</label>
-    <input th:field="*{name}" required>
+    <input th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
 
     <label>Currency:</label>
-    <input th:field="*{currency}" required>
+    <input th:field="*{currency}" required />
+    <div th:if="${#fields.hasErrors('currency')}" class="error" th:errors="*{currency}"></div>
 
     <label>Email:</label>
-    <input th:field="*{email}" type="email" required>
+    <input th:field="*{email}" type="email" required />
+    <div th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></div>
 
     <button type="submit">Update</button>
 </form>

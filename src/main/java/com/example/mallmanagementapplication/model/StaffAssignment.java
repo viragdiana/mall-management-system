@@ -39,22 +39,17 @@ public class StaffAssignment implements Identifiable {
 
     @Override
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public Floor getFloor() { return floor; }
-
     public void setFloor(Floor floor) { this.floor = floor; }
 
     public Staff getStaff() { return staff; }
-
     public void setStaff(Staff staff) { this.staff = staff; }
 
     public Shift getShift() { return shift; }
-
     public void setShift(Shift shift) { this.shift = shift; }
 
     public List<MaintenanceTask> getTasks() { return tasks; }
-
     public void setTasks(List<MaintenanceTask> tasks) { this.tasks = tasks; }
 }

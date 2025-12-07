@@ -25,18 +25,17 @@ public abstract class Staff implements Identifiable {
 
     public Staff() {}
 
-    public Staff(String name) { this.name = name; }
+    public Staff(String name) {
+        this.name = name;
+    }
 
     @Override
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public String getName() { return name; }
-
     public void setName(String name) { this.name = name; }
 
     public List<StaffAssignment> getAssignments() { return assignments; }
-
     public void setAssignments(List<StaffAssignment> assignments) { this.assignments = assignments; }
 }

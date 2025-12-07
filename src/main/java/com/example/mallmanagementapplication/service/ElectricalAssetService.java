@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.ElectricalAsset;
 import com.example.mallmanagementapplication.repository.ElectricalAssetRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,9 @@ public class ElectricalAssetService {
     }
 
     public void delete(Long id) {
-        if (!repo.existsById(id))
+        if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Electrical asset not found: " + id);
-
+        }
         repo.deleteById(id);
     }
 }

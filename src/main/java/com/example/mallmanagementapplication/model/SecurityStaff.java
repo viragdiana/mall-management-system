@@ -20,6 +20,5 @@ public class SecurityStaff extends Staff {
     }
 
     public String getBadgeNo() { return badgeNo; }
-
     public void setBadgeNo(String badgeNo) { this.badgeNo = badgeNo; }
 }

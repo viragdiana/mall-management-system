@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.repository.FloorRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +26,17 @@ public class FloorService {
     }
 
     public Floor save(Floor floor) {
-
-        // Business validation: a mall cannot have two floors with the same number
-        if (repo.existsByLevelAndMallId(floor.getLevel(), floor.getMall().getId())) {
-            throw new IllegalStateException("A floor with this level already exists in this mall!");
+        // business rule: un mall nu poate avea două etaje cu același level
+        if (floor.getMall() == null || floor.getMall().getId() == null) {
+            throw new IllegalStateException("Floor must belong to a mall.");
         }
+
+        repo.findByLevelAndMall_Id(floor.getLevel(), floor.getMall().getId())
+                .ifPresent(existing -> {
+                    if (floor.getId() == null || !existing.getId().equals(floor.getId())) {
+                        throw new IllegalStateException("A floor with this level already exists in this mall!");
+                    }
+                });
 
         return repo.save(floor);
     }

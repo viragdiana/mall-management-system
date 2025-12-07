@@ -3,8 +3,10 @@ package com.example.mallmanagementapplication.controller;
 import com.example.mallmanagementapplication.model.MaintenanceStaff;
 import com.example.mallmanagementapplication.model.MaintenanceType;
 import com.example.mallmanagementapplication.service.MaintenanceStaffService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -30,14 +32,23 @@ public class MaintenanceStaffController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("staff", new MaintenanceStaff());
         model.addAttribute("types", MaintenanceType.values());
-        return "maintenance/staff/form";
+        return "maintenance/staff/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute MaintenanceStaff staff) {
+    public String create(
+            @Valid @ModelAttribute("staff") MaintenanceStaff staff,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("types", MaintenanceType.values());
+            return "maintenance/staff/new";
+        }
+
         service.save(staff);
         return "redirect:/maintenance-staff";
     }
@@ -50,7 +61,16 @@ public class MaintenanceStaffController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute MaintenanceStaff updated) {
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("staff") MaintenanceStaff updated,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("types", MaintenanceType.values());
+            return "maintenance/staff/edit";
+        }
 
         MaintenanceStaff existing = service.getById(id);
         existing.setName(updated.getName());

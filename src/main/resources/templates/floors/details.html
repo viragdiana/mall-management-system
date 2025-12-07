@@ -1,18 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Floor Details</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Floor Details</title>
     <style>
-        body{font-family:Arial;margin:2rem;}
-        .box{background:#f9f9f9;padding:1.5rem;width:300px;border-radius:6px;}
-        a.button{padding:.5rem .8rem;background:#2980b9;color:white;border-radius:4px;text-decoration:none;}
-    </style></head>
+        body { font-family: Arial; margin: 2rem; }
+        .box { background:#f9f9f9; padding:1.5rem; width:400px; border-radius:6px; }
+        p { margin:0.5rem 0; }
+        a.button {
+            display:inline-block; margin-top:1rem; padding:0.4rem 0.8rem;
+            background:#2980b9; color:white; text-decoration:none; border-radius:4px;
+        }
+        ul { margin-top:1rem; }
+    </style>
+</head>
 <body>
 
 <h1>Floor Details</h1>
 
 <div class="box">
-    <p><strong>Number:</strong> <span th:text="${floor.number}"></span></p>
+    <p><strong>Level:</strong> <span th:text="${floor.level}"></span></p>
+    <p><strong>Mall:</strong> <span th:text="${floor.mall != null ? floor.mall.name : 'N/A'}"></span></p>
 </div>
+
+<h2>Shops on this floor</h2>
+<ul>
+    <li th:if="${#lists.isEmpty(floor.shops)}">No shops.</li>
+    <li th:each="s : ${floor.shops}">
+        <span th:text="${s.name}"></span> (owner: <span th:text="${s.ownerName}"></span>)
+    </li>
+</ul>
 
 <a href="/floors" class="button">← Back</a>
 

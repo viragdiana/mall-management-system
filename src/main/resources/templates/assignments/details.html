@@ -1,20 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Assignment Details</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment Details</title>
     <style>
-        body{font-family:Arial;margin:2rem;}
-        .box{background:#f9f9f9;width:350px;padding:1.5rem;border-radius:6px;}
-        p{margin:.5rem;}a.button{padding:.4rem .8rem;background:#2980b9;color:white;text-decoration:none;border-radius:4px;}
-    </style></head>
+        body { font-family: Arial; margin: 2rem; }
+        .box { background:#f9f9f9; padding:1.5rem; width:400px; border-radius:6px; }
+        p { margin:0.5rem 0; }
+        a.button {
+            display:inline-block; margin-top:1rem; padding:0.4rem 0.8rem;
+            background:#2980b9; color:white; text-decoration:none; border-radius:4px;
+        }
+        ul { margin-top:1rem; }
+    </style>
+</head>
 <body>
 
 <h1>Assignment Details</h1>
 
 <div class="box">
-    <p><strong>Floor ID:</strong> <span th:text="${assignment.floorId}"></span></p>
-    <p><strong>Staff ID:</strong> <span th:text="${assignment.staffId}"></span></p>
+    <p><strong>Floor:</strong>
+        <span th:text="${assignment.floor != null ? assignment.floor.level : 'N/A'}"></span>
+    </p>
+    <p><strong>Staff:</strong>
+        <span th:text="${assignment.staff != null ? assignment.staff.name : 'N/A'}"></span>
+    </p>
     <p><strong>Shift:</strong> <span th:text="${assignment.shift}"></span></p>
 </div>
+
+<h2>Tasks</h2>
+<ul>
+    <li th:if="${#lists.isEmpty(assignment.tasks)}">No tasks.</li>
+    <li th:each="t : ${assignment.tasks}">
+        <span th:text="${t.description}"></span> (<span th:text="${t.status}"></span>)
+    </li>
+</ul>
 
 <a href="/assignments" class="button">← Back</a>
 

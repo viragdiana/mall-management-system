@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Mall;
 import com.example.mallmanagementapplication.repository.MallRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 

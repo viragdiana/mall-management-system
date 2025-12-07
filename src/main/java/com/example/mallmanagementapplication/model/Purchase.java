@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
-
 import java.math.BigDecimal;
 
 @Entity
@@ -34,18 +33,14 @@ public class Purchase implements Identifiable {
 
     @Override
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public BigDecimal getAmount() { return amount; }
-
     public void setAmount(BigDecimal amount) { this.amount = amount; }
 
     public Customer getCustomer() { return customer; }
-
     public void setCustomer(Customer customer) { this.customer = customer; }
 
     public Shop getShop() { return shop; }
-
     public void setShop(Shop shop) { this.shop = shop; }
 }

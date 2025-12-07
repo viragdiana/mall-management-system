@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><title>Edit Floor</title>
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Floor</title>
     <style>
-        body{font-family:Arial;margin:2rem;}
-        form{width:300px;background:#f9f9f9;padding:1.5rem;border-radius:6px;}
-        label{display:block;margin-top:1rem;}
-        input{width:100%;padding:.5rem;}
-        button{margin-top:1rem;padding:.6rem;background:#2980b9;color:white;border:none;border-radius:4px;}
-    </style></head>
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 350px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
+        label { display:block; margin-top:1rem; }
+        input { width:100%; padding:0.5rem; margin-top:0.3rem; }
+        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
+        a { margin-top:1rem; display:block; }
+        .error { color:#c0392b; font-size:0.9rem; }
+    </style>
+</head>
 <body>
 
 <h1>Edit Floor</h1>
 
-<form th:action="@{/floors/{id}/edit(id=${floor.id})}" th:object="${floor}" method="post">
-    <label>Floor Number:</label>
-    <input th:field="*{number}" type="number" required>
-    <button>Update</button>
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+<form th:action="@{/floors/{id}/edit(id=${floor.id})}"
+      th:object="${floor}"
+      method="post">
+
+    <label>Level:</label>
+    <input th:field="*{level}" type="number" min="0" required />
+    <div th:if="${#fields.hasErrors('level')}" class="error" th:errors="*{level}"></div>
+
+    <button type="submit">Update</button>
 </form>
 
 <a href="/floors">← Back</a>

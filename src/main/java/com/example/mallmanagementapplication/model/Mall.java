@@ -38,30 +38,15 @@ public class Mall implements Identifiable {
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }
-
     public String getName() { return name; }
-
     public void setName(String name) { this.name = name; }
 
     public String getCity() { return city; }
-
     public void setCity(String city) { this.city = city; }
 
     public String getCountry() { return country; }
-
     public void setCountry(String country) { this.country = country; }
 
     public List<Floor> getFloors() { return floors; }
-
     public void setFloors(List<Floor> floors) { this.floors = floors; }
-
-    public void addFloor(Floor floor) {
-        floors.add(floor);
-        floor.setMall(this);
-    }
-
-    public void removeFloor(Floor floor) {
-        floors.remove(floor);
-        floor.setMall(null);
-    }
 }

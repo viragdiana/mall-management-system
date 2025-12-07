@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Assignment</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 400px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
+        label { display:block; margin-top:1rem; }
+        select { width:100%; padding:0.5rem; margin-top:0.3rem; }
+        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
+        a { margin-top:1rem; display:block; }
+        .error { color:#c0392b; font-size:0.9rem; }
+    </style>
+</head>
+<body>
+
+<h1>Add Assignment</h1>
+
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+<form th:action="@{/assignments}" th:object="${assignment}" method="post">
+
+    <label>Floor:</label>
+    <select th:field="*{floor}">
+        <option th:each="f : ${floors}"
+                th:value="${f}"
+                th:text="${f.level}"></option>
+    </select>
+
+    <label>Staff:</label>
+    <select th:field="*{staff}">
+        <option th:each="m : ${maintenanceStaff}"
+                th:value="${m}"
+                th:text="${'Maint: ' + m.name}"></option>
+        <option th:each="s : ${securityStaff}"
+                th:value="${s}"
+                th:text="${'Sec: ' + s.name}"></option>
+    </select>
+
+    <label>Shift:</label>
+    <select th:field="*{shift}">
+        <option th:each="sh : ${shifts}" th:value="${sh}" th:text="${sh}"></option>
+    </select>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/assignments">← Back</a>
+
+</body>
+</html>

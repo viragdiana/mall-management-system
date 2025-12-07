@@ -18,6 +18,5 @@ public class MaintenanceStaff extends Staff {
     }
 
     public MaintenanceType getType() { return type; }
-
     public void setType(MaintenanceType type) { this.type = type; }
 }

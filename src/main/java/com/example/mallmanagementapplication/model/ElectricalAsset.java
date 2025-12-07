@@ -37,14 +37,11 @@ public class ElectricalAsset implements Identifiable {
     public void setId(Long id) { this.id = id; }
 
     public Floor getFloor() { return floor; }
-
     public void setFloor(Floor floor) { this.floor = floor; }
 
     public ElectricalType getType() { return type; }
-
     public void setType(ElectricalType type) { this.type = type; }
 
     public AssetStatus getStatus() { return status; }
-
     public void setStatus(AssetStatus status) { this.status = status; }
 }

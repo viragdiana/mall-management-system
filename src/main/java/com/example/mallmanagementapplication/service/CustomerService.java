@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Customer;
 import com.example.mallmanagementapplication.repository.CustomerRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +26,12 @@ public class CustomerService {
     }
 
     public Customer save(Customer customer) {
-
-        // Business validation — email must be unique
-        if (repo.existsByEmail(customer.getEmail())) {
-            throw new IllegalStateException("Email already exists!");
-        }
+        // business rule: email trebuie să fie unic (dar permite update pe același client)
+        repo.findByEmail(customer.getEmail()).ifPresent(existing -> {
+            if (customer.getId() == null || !existing.getId().equals(customer.getId())) {
+                throw new IllegalStateException("Email already exists!");
+            }
+        });
 
         return repo.save(customer);
     }
@@ -40,7 +40,6 @@ public class CustomerService {
         if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Customer not found: " + id);
         }
-
         repo.deleteById(id);
     }
 }

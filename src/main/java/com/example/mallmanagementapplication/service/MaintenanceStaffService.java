@@ -2,7 +2,6 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.MaintenanceStaff;
 import com.example.mallmanagementapplication.repository.MaintenanceStaffRepository;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +30,9 @@ public class MaintenanceStaffService {
     }
 
     public void delete(Long id) {
-        if (!repo.existsById(id))
+        if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Staff not found: " + id);
-
+        }
         repo.deleteById(id);
     }
 }

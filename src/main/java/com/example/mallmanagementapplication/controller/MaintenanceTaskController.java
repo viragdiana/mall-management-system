@@ -4,8 +4,10 @@ import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.TaskStatus;
 import com.example.mallmanagementapplication.service.MaintenanceTaskService;
 import com.example.mallmanagementapplication.service.StaffAssignmentService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -34,16 +36,34 @@ public class MaintenanceTaskController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("task", new MaintenanceTask());
         model.addAttribute("statuses", TaskStatus.values());
         model.addAttribute("assignments", assignmentService.getAll());
-        return "tasks/form";
+        return "tasks/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute MaintenanceTask task) {
-        service.save(task);
+    public String create(
+            @Valid @ModelAttribute("task") MaintenanceTask task,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("assignments", assignmentService.getAll());
+            return "tasks/new";
+        }
+
+        try {
+            service.save(task);
+        } catch (IllegalStateException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("assignments", assignmentService.getAll());
+            return "tasks/new";
+        }
+
         return "redirect:/tasks";
     }
 
@@ -56,14 +76,32 @@ public class MaintenanceTaskController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute MaintenanceTask updated) {
-        MaintenanceTask existing = service.getById(id);
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("task") MaintenanceTask updated,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("assignments", assignmentService.getAll());
+            return "tasks/edit";
+        }
 
+        MaintenanceTask existing = service.getById(id);
         existing.setDescription(updated.getDescription());
         existing.setStatus(updated.getStatus());
         existing.setAssignment(updated.getAssignment());
 
-        service.save(existing);
+        try {
+            service.save(existing);
+        } catch (IllegalStateException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("assignments", assignmentService.getAll());
+            return "tasks/edit";
+        }
+
         return "redirect:/tasks";
     }
 

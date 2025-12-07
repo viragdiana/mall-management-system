@@ -41,30 +41,20 @@ public class Floor implements Identifiable {
 
     @Override
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public Integer getLevel() { return level; }
-
     public void setLevel(Integer level) { this.level = level; }
 
     public Mall getMall() { return mall; }
-
     public void setMall(Mall mall) { this.mall = mall; }
 
     public List<Shop> getShops() { return shops; }
-
     public void setShops(List<Shop> shops) { this.shops = shops; }
 
     public List<ElectricalAsset> getElectricalAssets() { return electricalAssets; }
-
-    public void setElectricalAssets(List<ElectricalAsset> electricalAssets) {
-        this.electricalAssets = electricalAssets;
-    }
+    public void setElectricalAssets(List<ElectricalAsset> assets) { this.electricalAssets = assets; }
 
     public List<StaffAssignment> getAssignments() { return assignments; }
-
-    public void setAssignments(List<StaffAssignment> assignments) {
-        this.assignments = assignments;
-    }
+    public void setAssignments(List<StaffAssignment> assignments) { this.assignments = assignments; }
 }

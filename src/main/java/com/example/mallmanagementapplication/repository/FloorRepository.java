@@ -4,9 +4,10 @@ import com.example.mallmanagementapplication.model.Floor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface FloorRepository extends JpaRepository<Floor, Long> {
 
-    boolean existsByLevelAndMallId(int level, Long mallId);
-
+    Optional<Floor> findByLevelAndMall_Id(Integer level, Long mallId);
 }

@@ -1,12 +1,15 @@
 package com.example.mallmanagementapplication.controller;
 
+import com.example.mallmanagementapplication.model.AssetStatus;
 import com.example.mallmanagementapplication.model.ElectricalAsset;
 import com.example.mallmanagementapplication.model.ElectricalType;
-import com.example.mallmanagementapplication.model.AssetStatus;
+import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.service.ElectricalAssetService;
 import com.example.mallmanagementapplication.service.FloorService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -16,7 +19,8 @@ public class ElectricalAssetController {
     private final ElectricalAssetService service;
     private final FloorService floorService;
 
-    public ElectricalAssetController(ElectricalAssetService service, FloorService floorService) {
+    public ElectricalAssetController(ElectricalAssetService service,
+                                     FloorService floorService) {
         this.service = service;
         this.floorService = floorService;
     }
@@ -34,16 +38,31 @@ public class ElectricalAssetController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("asset", new ElectricalAsset());
         model.addAttribute("floors", floorService.getAll());
         model.addAttribute("types", ElectricalType.values());
         model.addAttribute("statuses", AssetStatus.values());
-        return "assets/form";
+        return "assets/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute ElectricalAsset asset) {
+    public String create(
+            @Valid @ModelAttribute("asset") ElectricalAsset asset,
+            BindingResult bindingResult,
+            @RequestParam("floor") Long floorId,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("floors", floorService.getAll());
+            model.addAttribute("types", ElectricalType.values());
+            model.addAttribute("statuses", AssetStatus.values());
+            return "assets/new";
+        }
+
+        Floor floor = floorService.getById(floorId);
+        asset.setFloor(floor);
+
         service.save(asset);
         return "redirect:/assets";
     }
@@ -58,9 +77,20 @@ public class ElectricalAssetController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute ElectricalAsset updated) {
-        ElectricalAsset existing = service.getById(id);
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("asset") ElectricalAsset updated,
+            BindingResult bindingResult,
+            Model model
+    ) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("floors", floorService.getAll());
+            model.addAttribute("types", ElectricalType.values());
+            model.addAttribute("statuses", AssetStatus.values());
+            return "assets/edit";
+        }
 
+        ElectricalAsset existing = service.getById(id);
         existing.setFloor(updated.getFloor());
         existing.setType(updated.getType());
         existing.setStatus(updated.getStatus());

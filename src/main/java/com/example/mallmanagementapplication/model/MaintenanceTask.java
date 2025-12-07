@@ -34,18 +34,14 @@ public class MaintenanceTask implements Identifiable {
 
     @Override
     public Long getId() { return id; }
-
     public void setId(Long id) { this.id = id; }
 
     public String getDescription() { return description; }
-
     public void setDescription(String description) { this.description = description; }
 
     public TaskStatus getStatus() { return status; }
-
     public void setStatus(TaskStatus status) { this.status = status; }
 
     public StaffAssignment getAssignment() { return assignment; }
-
     public void setAssignment(StaffAssignment assignment) { this.assignment = assignment; }
 }

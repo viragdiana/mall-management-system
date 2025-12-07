@@ -2,8 +2,10 @@ package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.SecurityStaff;
 import com.example.mallmanagementapplication.service.SecurityStaffService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -29,13 +31,20 @@ public class SecurityStaffController {
     }
 
     @GetMapping("/new")
-    public String form(Model model) {
+    public String newForm(Model model) {
         model.addAttribute("staff", new SecurityStaff());
-        return "security/form";
+        return "security/new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute SecurityStaff staff) {
+    public String create(
+            @Valid @ModelAttribute("staff") SecurityStaff staff,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "security/new";
+        }
+
         service.save(staff);
         return "redirect:/security-staff";
     }
@@ -47,9 +56,16 @@ public class SecurityStaffController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(@PathVariable Long id, @ModelAttribute SecurityStaff updated) {
-        SecurityStaff existing = service.getById(id);
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("staff") SecurityStaff updated,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            return "security/edit";
+        }
 
+        SecurityStaff existing = service.getById(id);
         existing.setName(updated.getName());
         existing.setBadgeNo(updated.getBadgeNo());
 

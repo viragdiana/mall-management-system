@@ -4,27 +4,36 @@
     <meta charset="UTF-8">
     <title>Edit Mall</title>
     <style>
-        body{font-family:Arial;margin:2rem;}
-        form{width:350px;background:#f9f9f9;padding:1.5rem;border-radius:6px;}
-        label{display:block;margin-top:1rem;}
-        input{width:100%;padding:.5rem;margin-top:.3rem;}
-        button{margin-top:1rem;padding:.6rem;background:#2980b9;color:white;border:none;border-radius:4px;}
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 400px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
+        label { display:block; margin-top:1rem; }
+        input { width:100%; padding:0.5rem; margin-top:0.3rem; }
+        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
+        a { margin-top:1rem; display:block; }
+        .error { color:#c0392b; font-size:0.9rem; }
     </style>
 </head>
 <body>
 
 <h1>Edit Mall</h1>
 
-<form th:action="@{/malls/{id}/edit(id=${mall.id})}" th:object="${mall}" method="post">
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+<form th:action="@{/malls/{id}/edit(id=${mall.id})}"
+      th:object="${mall}"
+      method="post">
 
     <label>Name:</label>
-    <input th:field="*{name}" required>
+    <input th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
 
     <label>City:</label>
-    <input th:field="*{city}" required>
+    <input th:field="*{city}" required />
+    <div th:if="${#fields.hasErrors('city')}" class="error" th:errors="*{city}"></div>
 
     <label>Country:</label>
-    <input th:field="*{country}" required>
+    <input th:field="*{country}" required />
+    <div th:if="${#fields.hasErrors('country')}" class="error" th:errors="*{country}"></div>
 
     <button type="submit">Update</button>
 </form>

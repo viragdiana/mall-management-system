@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Security Staff</title>
+    <style>
+        body { font-family: Arial; margin: 2rem; }
+        form { width: 350px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
+        label { display:block; margin-top:1rem; }
+        input { width:100%; padding:0.5rem; margin-top:0.3rem; }
+        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
+        a { margin-top:1rem; display:block; }
+        .error { color:#c0392b; font-size:0.9rem; }
+    </style>
+</head>
+<body>
+
+<h1>Add Security Staff</h1>
+
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+<form th:action="@{/security-staff}" th:object="${staff}" method="post">
+
+    <label>Name:</label>
+    <input th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+
+    <label>Badge No:</label>
+    <input th:field="*{badgeNo}" required />
+    <div th:if="${#fields.hasErrors('badgeNo')}" class="error" th:errors="*{badgeNo}"></div>
+
+    <button type="submit">Save</button>
+</form>
+
+<a href="/security-staff">← Back</a>
+
+</body>
+</html>
