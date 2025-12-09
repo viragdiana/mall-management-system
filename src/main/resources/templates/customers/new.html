@@ -2,36 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Customer Details</title>
+    <title>Add Customer</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        .box { background:#f9f9f9; padding:1.5rem; width:350px; border-radius:6px; }
-        p { margin:0.5rem 0; }
-        a.button {
-            display:inline-block; margin-top:1rem; padding:0.4rem 0.8rem;
-            background:#2980b9; color:white; text-decoration:none; border-radius:4px;
+        form {
+            width: 350px; background: #f9f9f9;
+            padding: 1.5rem; border-radius: 6px;
         }
-        ul { margin-top:1rem; }
+        label { margin-top: 1rem; display: block; }
+        input { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+        button {
+            margin-top: 1rem; background: #2980b9;
+            color: white; padding: 0.6rem;
+            border-radius: 4px; border: none; cursor: pointer;
+        }
+        .error { color:#c0392b; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-<h1>Customer Details</h1>
+<h1>Add Customer</h1>
 
-<div class="box">
-    <p><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
-    <p><strong>Currency:</strong> <span th:text="${customer.currency}"></span></p>
-    <p><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
-</div>
+<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
-<h2>Purchases</h2>
-<ul>
-    <li th:if="${#lists.isEmpty(customer.purchases)}">No purchases yet.</li>
-    <li th:each="p : ${customer.purchases}">
-        Amount: <span th:text="${p.amount}"></span>
-        in shop: <span th:text="${p.shop != null ? p.shop.name : 'N/A'}"></span>
-    </li>
-</ul>
+<form th:action="@{/customers}" th:object="${customer}" method="post">
+
+    <label>Name:</label>
+    <input th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}" class="error"
+         th:errors="*{name}"></div>
+
+    <label>Currency:</label>
+    <input th:field="*{currency}" required />
+
+    <label>Email:</label>
+    <input th:field="*{email}" required />
+    <div th:if="${#fields.hasErrors('email')}" class="error"
+         th:errors="*{email}"></div>
+
+    <button type="submit">Save</button>
+</form>
 
 <a href="/customers" class="button">← Back</a>
 

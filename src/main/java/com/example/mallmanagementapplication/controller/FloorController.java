@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.controller;
 import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.MallService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -95,4 +96,20 @@ public class FloorController {
         service.delete(id);
         return "redirect:/floors";
     }
+
+
+    @Transactional
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+
+        Floor floor = service.getById(id);
+
+        model.addAttribute("floor", floor);
+        model.addAttribute("shops", floor.getShops());
+        model.addAttribute("assets", floor.getElectricalAssets());
+        model.addAttribute("assignments", floor.getAssignments());
+
+        return "floors/details";
+    }
+
 }

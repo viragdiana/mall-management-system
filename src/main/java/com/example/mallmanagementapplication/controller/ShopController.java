@@ -4,6 +4,7 @@ import com.example.mallmanagementapplication.model.Shop;
 import com.example.mallmanagementapplication.model.ShopType;
 import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.ShopService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,12 +28,13 @@ public class ShopController {
         model.addAttribute("shops", service.getAll());
         return "shops/index";
     }
-
+    @Transactional
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
         model.addAttribute("shop", service.getById(id));
         return "shops/details";
     }
+
 
     @GetMapping("/new")
     public String newForm(Model model) {
