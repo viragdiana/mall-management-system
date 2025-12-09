@@ -1,20 +1,26 @@
 package com.example.mallmanagementapplication.service;
 
-import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.model.MaintenanceTask;
+import com.example.mallmanagementapplication.repository.FloorRepository;
 import com.example.mallmanagementapplication.repository.MaintenanceTaskRepository;
+import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class MaintenanceTaskService {
 
     private final MaintenanceTaskRepository repo;
+    private final FloorRepository floorRepo;
+    private final StaffAssignmentRepository assignmentRepo;
 
-    public MaintenanceTaskService(MaintenanceTaskRepository repo) {
+    public MaintenanceTaskService(MaintenanceTaskRepository repo,
+                                  FloorRepository floorRepo,
+                                  StaffAssignmentRepository assignmentRepo) {
         this.repo = repo;
+        this.floorRepo = floorRepo;
+        this.assignmentRepo = assignmentRepo;
     }
 
     // GET ALL
@@ -28,34 +34,29 @@ public class MaintenanceTaskService {
                 .orElseThrow(() -> new EntityNotFoundException("Task not found: " + id));
     }
 
-    // SAVE / UPDATE
     public MaintenanceTask save(MaintenanceTask task) {
 
-        // VALIDARE 1 — descriere
         if (task.getDescription() == null || task.getDescription().isBlank()) {
-            throw new IllegalStateException("Task description cannot be empty");
+            throw new IllegalStateException("Description cannot be empty!");
         }
 
-        // VALIDARE 2 — status (nu poate fi null)
         if (task.getStatus() == null) {
-            throw new IllegalStateException("Task status is required");
+            throw new IllegalStateException("Task must have a status!");
         }
 
-        // VALIDARE 3 — floor nu poate fi null
-        if (task.getFloor() == null) {
-            throw new IllegalStateException("Task must be assigned to a floor");
+        if (task.getFloor() == null || task.getFloor().getId() == null) {
+            throw new IllegalStateException("Task must belong to a floor!");
         }
 
-        // VALIDARE 4 — dacă are assignment, assignment.floor trebuie să fie același
+        // VALIDARE REALĂ ÎN DB
+        floorRepo.findById(task.getFloor().getId())
+                .orElseThrow(() -> new IllegalStateException("Floor does not exist!"));
+
         if (task.getAssignment() != null) {
-            Floor f1 = task.getFloor();
-            Floor f2 = task.getAssignment().getFloor();
+            Long assignId = task.getAssignment().getId();
 
-            if (!f1.getId().equals(f2.getId())) {
-                throw new IllegalStateException(
-                        "Task and assignment must belong to the same floor!"
-                );
-            }
+            assignmentRepo.findById(assignId)
+                    .orElseThrow(() -> new IllegalStateException("Assignment does not exist!"));
         }
 
         return repo.save(task);
