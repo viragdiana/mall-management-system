@@ -2,13 +2,14 @@ package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.TaskStatus;
+import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.MaintenanceTaskService;
 import com.example.mallmanagementapplication.service.StaffAssignmentService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 
 @Controller
 @RequestMapping("/tasks")
@@ -16,11 +17,16 @@ public class MaintenanceTaskController {
 
     private final MaintenanceTaskService service;
     private final StaffAssignmentService assignmentService;
+    private final FloorService floorService;
 
-    public MaintenanceTaskController(MaintenanceTaskService service,
-                                     StaffAssignmentService assignmentService) {
+    public MaintenanceTaskController(
+            MaintenanceTaskService service,
+            StaffAssignmentService assignmentService,
+            FloorService floorService
+    ) {
         this.service = service;
         this.assignmentService = assignmentService;
+        this.floorService = floorService;
     }
 
     @GetMapping
@@ -39,6 +45,7 @@ public class MaintenanceTaskController {
     public String newForm(Model model) {
         model.addAttribute("task", new MaintenanceTask());
         model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("floors", floorService.getAll());
         model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/new";
     }
@@ -51,6 +58,7 @@ public class MaintenanceTaskController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/new";
         }
@@ -60,6 +68,7 @@ public class MaintenanceTaskController {
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/new";
         }
@@ -71,6 +80,7 @@ public class MaintenanceTaskController {
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("task", service.getById(id));
         model.addAttribute("statuses", TaskStatus.values());
+        model.addAttribute("floors", floorService.getAll());
         model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/edit";
     }
@@ -84,13 +94,16 @@ public class MaintenanceTaskController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/edit";
         }
 
         MaintenanceTask existing = service.getById(id);
+
         existing.setDescription(updated.getDescription());
         existing.setStatus(updated.getStatus());
+        existing.setFloor(updated.getFloor());       // NEW
         existing.setAssignment(updated.getAssignment());
 
         try {
@@ -98,6 +111,7 @@ public class MaintenanceTaskController {
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("statuses", TaskStatus.values());
+            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/edit";
         }

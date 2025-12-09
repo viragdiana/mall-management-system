@@ -1,52 +1,54 @@
-vgf<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Maintenance Tasks</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        table { border-collapse: collapse; width: 100%; margin-top:1rem; }
-        th, td { border:1px solid #ccc; padding:0.6rem; text-align:left; }
-        th { background:#f2f2f2; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 0.6rem; }
+        th { background: #f2f2f2; }
         a.button, button {
-            display:inline-block; padding:0.4rem 0.8rem; margin:0.1rem;
-            background:#2980b9; color:#fff; text-decoration:none;
-            border-radius:4px; border:none; cursor:pointer;
+            background: #2980b9; color: white; padding: 0.4rem 0.8rem;
+            text-decoration: none; border-radius: 4px; border: none; cursor: pointer;
         }
-        button.delete-btn { background:#c0392b; }
-        .top-bar { margin-bottom:1rem; }
-        .error { color:#c0392b; margin-top:0.5rem; }
+        button.delete-btn { background: #c0392b; }
+        .top-bar { margin-bottom: 1rem; }
     </style>
 </head>
+
 <body>
 
 <h1>Maintenance Tasks</h1>
 
 <div class="top-bar">
-    <a href="/tasks/new" class="button">Add Task</a>
+    <a class="button" href="/tasks/new">+ Add Task</a>
 </div>
-
-<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
 <table>
     <thead>
     <tr>
         <th>Description</th>
         <th>Status</th>
+        <th>Floor</th>
         <th>Assignment</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="t : ${tasks}">
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
-        <td th:text="${t.assignment != null ? t.assignment.shift : 'None'}"></td>
+        <td th:text="${t.floor.level}"></td>
+        <td th:text="${t.assignment != null ? t.assignment.staff.name : '—'}"></td>
+
         <td>
-            <a th:href="@{/tasks/{id}(id=${t.id})}" class="button">Details</a>
-            <a th:href="@{/tasks/{id}/edit(id=${t.id})}" class="button">Edit</a>
-            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" style="display:inline">
-                <button type="submit" class="delete-btn">Delete</button>
+            <a class="button" th:href="@{/tasks/{id}(id=${t.id})}">Details</a>
+            <a class="button" th:href="@{/tasks/{id}/edit(id=${t.id})}">Edit</a>
+
+            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" style="display:inline;">
+                <button class="delete-btn" type="submit">Delete</button>
             </form>
         </td>
     </tr>

@@ -2,41 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add Task</title>
+    <title>Add Maintenance Task</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        form { width: 400px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
-        label { display:block; margin-top:1rem; }
-        input, textarea, select { width:100%; padding:0.5rem; margin-top:0.3rem; }
-        textarea { resize:vertical; }
-        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
-        a { margin-top:1rem; display:block; }
-        .error { color:#c0392b; font-size:0.9rem; }
+        form { width: 350px; background: #f9f9f9; padding: 1.5rem; border-radius: 6px; }
+        label { margin-top: 1rem; display: block; }
+        input, select { width: 100%; padding: 0.5rem; margin-top: 0.3rem; }
+        button { margin-top: 1rem; background: #2980b9; color: white;
+            padding: 0.6rem; border-radius: 4px; border: none; cursor: pointer; }
+        .error { color: #c0392b; font-size: 0.9rem; }
     </style>
 </head>
+
 <body>
 
-<h1>Add Task</h1>
+<h1>Add Maintenance Task</h1>
 
 <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
 <form th:action="@{/tasks}" th:object="${task}" method="post">
 
     <label>Description:</label>
-    <textarea th:field="*{description}" rows="3" required></textarea>
-    <div th:if="${#fields.hasErrors('description')}" class="error" th:errors="*{description}"></div>
+    <input th:field="*{description}" required/>
+    <div th:if="${#fields.hasErrors('description')}" class="error"
+         th:errors="*{description}"></div>
 
     <label>Status:</label>
     <select th:field="*{status}">
         <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
     </select>
 
+    <label>Floor:</label>
+    <select th:field="*{floor.id}" required>
+        <option th:each="f : ${floors}"
+                th:value="${f.id}"
+                th:text="'Level ' + ${f.level}">
+        </option>
+    </select>
+
     <label>Assignment (optional):</label>
-    <select th:field="*{assignment}">
-        <option th:value="">-- None --</option>
+    <select th:field="*{assignment.id}">
+        <option value="">-- none --</option>
         <option th:each="a : ${assignments}"
-                th:value="${a}"
-                th:text="${a.floor.level + ' - ' + a.shift}"></option>
+                th:value="${a.id}"
+                th:text="${a.staff.name + ' (Floor ' + a.floor.level + ')'}">
+        </option>
     </select>
 
     <button type="submit">Save</button>
