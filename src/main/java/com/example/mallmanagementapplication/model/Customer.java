@@ -3,6 +3,8 @@ package com.example.mallmanagementapplication.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +17,26 @@ public class Customer implements Identifiable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    /** NAME: litere, cifre, spații, minim 2, max 50 */
+    @NotBlank(message = "Name cannot be blank")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
+    @Pattern(
+            regexp = "^[A-Za-zÀ-ž0-9\\s]+$",
+            message = "Name can only contain letters, digits and spaces"
+    )
     private String name;
 
-    @NotBlank
+    /** CURRENCY: doar EUR, USD, RON */
+    @NotBlank(message = "Currency cannot be blank")
+    @Pattern(
+            regexp = "^(EUR|USD|RON)$",
+            message = "Currency must be EUR, USD or RON"
+    )
     private String currency;
 
-    @Email
-    @NotBlank
+    /** EMAIL: valid */
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be blank")
     private String email;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)

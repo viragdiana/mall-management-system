@@ -15,8 +15,8 @@ public class Floor implements Identifiable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Floor level cannot be null")
+    @PositiveOrZero(message = "Floor level must be zero or a positive number")
     private Integer level;
 
     @ManyToOne(optional = false)

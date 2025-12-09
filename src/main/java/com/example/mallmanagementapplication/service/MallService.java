@@ -26,6 +26,19 @@ public class MallService {
     }
 
     public Mall save(Mall mall) {
+
+        if (mall.getName() == null || mall.getName().isBlank()) {
+            throw new IllegalStateException("Mall must have a name!");
+        }
+
+        if (mall.getCity() == null || mall.getCity().isBlank()) {
+            throw new IllegalStateException("Mall must have a city!");
+        }
+
+        if (mall.getCountry() == null || mall.getCountry().isBlank()) {
+            throw new IllegalStateException("Mall must have a country!");
+        }
+
         return repo.save(mall);
     }
 
