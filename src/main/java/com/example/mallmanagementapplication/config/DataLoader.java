@@ -12,151 +12,145 @@ import java.util.List;
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    private final MallRepository malls;
-    private final FloorRepository floors;
-    private final ShopRepository shops;
-    private final CustomerRepository customers;
-    private final PurchaseRepository purchases;
+    private final MallRepository mallRepo;
+    private final FloorRepository floorRepo;
+    private final ShopRepository shopRepo;
+    private final CustomerRepository customerRepo;
+    private final PurchaseRepository purchaseRepo;
     private final SecurityStaffRepository securityRepo;
     private final MaintenanceStaffRepository maintenanceRepo;
-    private final StaffAssignmentRepository assignments;
-    private final MaintenanceTaskRepository tasks;
-    private final ElectricalAssetRepository assets;
+    private final StaffAssignmentRepository assignmentRepo;
+    private final MaintenanceTaskRepository taskRepo;
+    private final ElectricalAssetRepository assetRepo;
 
     public DataLoader(
-            MallRepository malls,
-            FloorRepository floors,
-            ShopRepository shops,
-            CustomerRepository customers,
-            PurchaseRepository purchases,
+            MallRepository mallRepo,
+            FloorRepository floorRepo,
+            ShopRepository shopRepo,
+            CustomerRepository customerRepo,
+            PurchaseRepository purchaseRepo,
             SecurityStaffRepository securityRepo,
             MaintenanceStaffRepository maintenanceRepo,
-            StaffAssignmentRepository assignments,
-            MaintenanceTaskRepository tasks,
-            ElectricalAssetRepository assets
+            StaffAssignmentRepository assignmentRepo,
+            MaintenanceTaskRepository taskRepo,
+            ElectricalAssetRepository assetRepo
     ) {
-        this.malls = malls;
-        this.floors = floors;
-        this.shops = shops;
-        this.customers = customers;
-        this.purchases = purchases;
+        this.mallRepo = mallRepo;
+        this.floorRepo = floorRepo;
+        this.shopRepo = shopRepo;
+        this.customerRepo = customerRepo;
+        this.purchaseRepo = purchaseRepo;
         this.securityRepo = securityRepo;
         this.maintenanceRepo = maintenanceRepo;
-        this.assignments = assignments;
-        this.tasks = tasks;
-        this.assets = assets;
+        this.assignmentRepo = assignmentRepo;
+        this.taskRepo = taskRepo;
+        this.assetRepo = assetRepo;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
-        // ==== MALLS ====
-        List<Mall> mallList = new ArrayList<>();
+        /* ===================== MALLS ===================== */
+        List<Mall> malls = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            mallList.add(new Mall("Mall " + i, "City " + i, "Country " + i));
+            malls.add(new Mall("Mall " + i, "City " + i, "Country " + i));
         }
-        malls.saveAll(mallList);
+        mallRepo.saveAll(malls);
 
-
-        // ==== FLOORS ====
-        List<Floor> floorList = new ArrayList<>();
-        for (Mall m : mallList) {
-            for (int i = 0; i < 10; i++) {
-                floorList.add(new Floor(i, m));
+        /* ===================== FLOORS ===================== */
+        List<Floor> floors = new ArrayList<>();
+        for (Mall mall : malls) {
+            for (int level = 0; level < 3; level++) {
+                floors.add(new Floor(level, mall));
             }
         }
-        floors.saveAll(floorList);
+        floorRepo.saveAll(floors);
 
-
-        // ==== SHOPS ====
-        List<Shop> shopList = new ArrayList<>();
-        for (Floor f : floorList) {
-            for (int i = 0; i < 10; i++) {
-                shopList.add(new Shop(
-                        "Shop" + i,
-                        "Owner " + i,
-                        50 + i,
-                        ShopType.CLOTHING,
-                        f
-                ));
-            }
+        /* ===================== SHOPS ===================== */
+        List<Shop> shops = new ArrayList<>();
+        for (Floor floor : floors) {
+            shops.add(new Shop(
+                    "Shop L" + floor.getLevel(),
+                    "Owner " + floor.getLevel(),
+                    60,
+                    ShopType.CLOTHING,
+                    floor
+            ));
         }
-        shops.saveAll(shopList);
+        shopRepo.saveAll(shops);
 
-
-        // ==== CUSTOMERS ====
-        List<Customer> customerList = new ArrayList<>();
+        /* ===================== CUSTOMERS ===================== */
+        List<Customer> customers = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            customerList.add(new Customer("Customer " + i, "EUR", "customer" + i + "@mail.com"));
+            customers.add(new Customer(
+                    "Customer " + i,
+                    "EUR",
+                    "customer" + i + "@mail.com"
+            ));
         }
-        customers.saveAll(customerList);
+        customerRepo.saveAll(customers);
 
-
-        // ==== SECURITY STAFF ====
-        List<SecurityStaff> secList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            secList.add(new SecurityStaff("Guard " + i, "B-" + i));
+        /* ===================== SECURITY STAFF ===================== */
+        List<SecurityStaff> guards = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            guards.add(new SecurityStaff("Guard " + i, "Badge-" + i));
         }
-        securityRepo.saveAll(secList);
+        securityRepo.saveAll(guards);
 
-
-        // ==== MAINTENANCE STAFF ====
-        List<MaintenanceStaff> maintList = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            maintList.add(new MaintenanceStaff("Worker " + i, MaintenanceType.ELECTRICAL));
+        /* ===================== MAINTENANCE STAFF ===================== */
+        List<MaintenanceStaff> workers = new ArrayList<>();
+        for (int i = 1; i <= 5; i++) {
+            workers.add(new MaintenanceStaff(
+                    "Worker " + i,
+                    MaintenanceType.ELECTRICAL
+            ));
         }
-        maintenanceRepo.saveAll(maintList);
+        maintenanceRepo.saveAll(workers);
 
-
-        // ==== STAFF ASSIGNMENTS ====
-        List<StaffAssignment> assignList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            assignList.add(new StaffAssignment(
-                    floorList.get(i),
-                    maintList.get(i),
+        /* ===================== STAFF ASSIGNMENTS ===================== */
+        List<StaffAssignment> assignments = new ArrayList<>();
+        for (int i = 0; i < workers.size(); i++) {
+            assignments.add(new StaffAssignment(
+                    floors.get(i),
+                    workers.get(i),
                     Shift.MORNING
             ));
         }
-        assignments.saveAll(assignList);
+        assignmentRepo.saveAll(assignments);
 
-
-        // ==== MAINTENANCE TASKS ====
-        List<MaintenanceTask> taskList = new ArrayList<>();
-        for (StaffAssignment a : assignList) {
-
-            MaintenanceTask t = new MaintenanceTask(
-                    "Fix issue on floor " + a.getFloor().getLevel(),
+        /* ===================== MAINTENANCE TASKS ===================== */
+        List<MaintenanceTask> tasks = new ArrayList<>();
+        for (StaffAssignment a : assignments) {
+            tasks.add(new MaintenanceTask(
+                    "Fix electrical issue on floor " + a.getFloor().getLevel(),
                     TaskStatus.PLANNED,
-                    a.getFloor()   // <-- 🔥 legăm task-ul de floor
-            );
-
-            t.setAssignment(a); // poate exista sau nu, dar e logic să existe
-
-            taskList.add(t);
-        }
-        tasks.saveAll(taskList);
-
-
-
-        // ==== ELECTRICAL ASSETS ====
-        List<ElectricalAsset> assetList = new ArrayList<>();
-        for (Floor f : floorList) {
-            assetList.add(new ElectricalAsset(f, ElectricalType.LIGHT, AssetStatus.WORKING));
-        }
-        assets.saveAll(assetList);
-
-
-        // ==== PURCHASES ====
-        List<Purchase> purchaseList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            purchaseList.add(new Purchase(
-                    BigDecimal.valueOf(20 + i),
-                    customerList.get(i % 10),
-                    shopList.get(i)
+                    a
             ));
         }
-        purchases.saveAll(purchaseList);
+        taskRepo.saveAll(tasks);
 
-        System.out.println("=== 10 entries per entity inserted successfully ===");
+        /* ===================== ELECTRICAL ASSETS ===================== */
+        List<ElectricalAsset> assets = new ArrayList<>();
+        for (Floor f : floors) {
+            assets.add(new ElectricalAsset(
+                    f,
+                    ElectricalType.LIGHT,
+                    AssetStatus.WORKING
+            ));
+        }
+        assetRepo.saveAll(assets);
+
+        /* ===================== PURCHASES ===================== */
+        List<Purchase> purchases = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            purchases.add(new Purchase(
+                    BigDecimal.valueOf(25 + i),
+                    customers.get(i % customers.size()),
+                    shops.get(i % shops.size())
+            ));
+        }
+        purchaseRepo.saveAll(purchases);
+
+        System.out.println("✅ DataLoader finished: demo data inserted successfully.");
     }
 }

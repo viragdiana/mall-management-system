@@ -15,7 +15,6 @@
         }
         button.delete-btn { background:#c0392b; }
         .top-bar { margin-bottom:1rem; }
-        .error { color:#c0392b; margin-top:0.5rem; }
     </style>
 </head>
 <body>
@@ -23,10 +22,8 @@
 <h1>Floors</h1>
 
 <div class="top-bar">
-    <a href="/floors/new" class="button">Add Floor</a>
+    <a href="/floors/new" class="button">+ Add Floor</a>
 </div>
-
-<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
 
 <table>
     <thead>
@@ -39,7 +36,7 @@
     <tbody>
     <tr th:each="f : ${floors}">
         <td th:text="${f.level}"></td>
-        <td th:text="${f.mall != null ? f.mall.name : 'N/A'}"></td>
+        <td th:text="${f.mall.name}"></td>
         <td>
             <a th:href="@{/floors/{id}(id=${f.id})}" class="button">Details</a>
             <a th:href="@{/floors/{id}/edit(id=${f.id})}" class="button">Edit</a>
