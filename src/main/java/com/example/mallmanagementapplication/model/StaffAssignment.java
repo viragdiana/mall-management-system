@@ -14,24 +14,27 @@ public class StaffAssignment implements Identifiable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /** Assignment → Floor */
     @ManyToOne(optional = false)
     @JoinColumn(name = "floor_id")
     private Floor floor;
 
+    /** Assignment → MaintenanceStaff */
     @ManyToOne(optional = false)
     @JoinColumn(name = "staff_id")
-    private Staff staff;
+    private MaintenanceStaff staff;
 
     @Enumerated(EnumType.STRING)
     @NotNull
     private Shift shift;
 
+    /** 🔥 Assignment → Tasks */
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MaintenanceTask> tasks = new ArrayList<>();
 
     public StaffAssignment() {}
 
-    public StaffAssignment(Floor floor, Staff staff, Shift shift) {
+    public StaffAssignment(Floor floor, MaintenanceStaff staff, Shift shift) {
         this.floor = floor;
         this.staff = staff;
         this.shift = shift;
@@ -39,17 +42,15 @@ public class StaffAssignment implements Identifiable {
 
     @Override
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public Floor getFloor() { return floor; }
     public void setFloor(Floor floor) { this.floor = floor; }
 
-    public Staff getStaff() { return staff; }
-    public void setStaff(Staff staff) { this.staff = staff; }
+    public MaintenanceStaff getStaff() { return staff; }
+    public void setStaff(MaintenanceStaff staff) { this.staff = staff; }
 
     public Shift getShift() { return shift; }
     public void setShift(Shift shift) { this.shift = shift; }
 
     public List<MaintenanceTask> getTasks() { return tasks; }
-    public void setTasks(List<MaintenanceTask> tasks) { this.tasks = tasks; }
 }

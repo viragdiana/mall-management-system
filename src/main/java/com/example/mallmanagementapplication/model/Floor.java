@@ -16,19 +16,22 @@ public class Floor implements Identifiable {
     private Long id;
 
     @NotNull(message = "Floor level cannot be null")
-    @PositiveOrZero(message = "Floor level must be zero or a positive number")
+    @PositiveOrZero(message = "Floor level must be zero or positive")
     private Integer level;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "mall_id")
     private Mall mall;
 
+    // Shops on this floor
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shop> shops = new ArrayList<>();
 
+    // Electrical assets on this floor
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ElectricalAsset> electricalAssets = new ArrayList<>();
 
+    // Staff assignments on this floor
     @OneToMany(mappedBy = "floor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StaffAssignment> assignments = new ArrayList<>();
 
@@ -41,20 +44,20 @@ public class Floor implements Identifiable {
 
     @Override
     public Long getId() { return id; }
+
     public void setId(Long id) { this.id = id; }
 
     public Integer getLevel() { return level; }
+
     public void setLevel(Integer level) { this.level = level; }
 
     public Mall getMall() { return mall; }
+
     public void setMall(Mall mall) { this.mall = mall; }
 
     public List<Shop> getShops() { return shops; }
-    public void setShops(List<Shop> shops) { this.shops = shops; }
 
     public List<ElectricalAsset> getElectricalAssets() { return electricalAssets; }
-    public void setElectricalAssets(List<ElectricalAsset> assets) { this.electricalAssets = assets; }
 
     public List<StaffAssignment> getAssignments() { return assignments; }
-    public void setAssignments(List<StaffAssignment> assignments) { this.assignments = assignments; }
 }

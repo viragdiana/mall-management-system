@@ -5,13 +5,45 @@
     <title>Floor Details</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        .box { background:#f9f9f9; padding:1.5rem; width:400px; border-radius:6px; }
-        p { margin:0.5rem 0; }
-        a.button {
-            display:inline-block; margin-top:1rem; padding:0.4rem 0.8rem;
-            background:#2980b9; color:white; text-decoration:none; border-radius:4px;
+
+        h1, h2 { margin-top: 2rem; }
+
+        .box {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 6px;
+            width: 400px;
         }
-        ul { margin-top:1rem; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 0.6rem;
+            text-align: left;
+        }
+
+        th { background: #f2f2f2; }
+
+        a.button {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.4rem 0.8rem;
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .empty {
+            font-style: italic;
+            color: #777;
+            margin-top: 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -20,18 +52,117 @@
 
 <div class="box">
     <p><strong>Level:</strong> <span th:text="${floor.level}"></span></p>
-    <p><strong>Mall:</strong> <span th:text="${floor.mall != null ? floor.mall.name : 'N/A'}"></span></p>
+    <p><strong>Mall:</strong> <span th:text="${floor.mall.name}"></span></p>
 </div>
 
-<h2>Shops on this floor</h2>
-<ul>
-    <li th:if="${#lists.isEmpty(floor.shops)}">No shops.</li>
-    <li th:each="s : ${floor.shops}">
-        <span th:text="${s.name}"></span> (owner: <span th:text="${s.ownerName}"></span>)
-    </li>
-</ul>
-
 <a href="/floors" class="button">← Back</a>
+
+<!-- ================= SHOPS ================= -->
+<h2>Shops</h2>
+
+<div th:if="${#lists.isEmpty(shops)}" class="empty">
+    No shops on this floor.
+</div>
+
+<table th:if="${!#lists.isEmpty(shops)}">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Owner</th>
+        <th>Area (sqm)</th>
+        <th>Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${shops}">
+        <td th:text="${s.name}"></td>
+        <td th:text="${s.ownerName}"></td>
+        <td th:text="${s.areaSqm}"></td>
+        <td th:text="${s.type}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- ================= ELECTRICAL ASSETS ================= -->
+<h2>Electrical Assets</h2>
+
+<div th:if="${#lists.isEmpty(assets)}" class="empty">
+    No electrical assets on this floor.
+</div>
+
+<table th:if="${!#lists.isEmpty(assets)}">
+    <thead>
+    <tr>
+        <th>Type</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${assets}">
+        <td th:text="${a.type}"></td>
+        <td th:text="${a.status}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- ================= STAFF ASSIGNMENTS ================= -->
+<h2>Staff Assignments</h2>
+
+<div th:if="${#lists.isEmpty(assignments)}" class="empty">
+    No staff assignments for this floor.
+</div>
+
+<table th:if="${!#lists.isEmpty(assignments)}">
+    <thead>
+    <tr>
+        <th>Staff Name</th>
+        <th>Type</th>
+        <th>Shift</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${assignments}">
+        <td th:text="${a.staff.name}"></td>
+        <td th:text="${a.staff.class.simpleName}"></td>
+        <td th:text="${a.shift}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- ================= MAINTENANCE TASKS (DERIVED) ================= -->
+<h2>Maintenance Tasks</h2>
+
+<div th:if="${#lists.isEmpty(assignments)}" class="empty">
+    No maintenance tasks (no assignments).
+</div>
+
+<table th:if="${!#lists.isEmpty(assignments)}">
+    <thead>
+    <tr>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Assigned Staff</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <!-- iterăm assignments → tasks -->
+    <tr th:each="a : ${assignments}">
+        <td colspan="3" th:if="${#lists.isEmpty(a.tasks)}" class="empty">
+            No tasks for <strong th:text="${a.staff.name}"></strong>
+        </td>
+    </tr>
+
+    <tr th:each="a : ${assignments}">
+    <tr th:each="t : ${a.tasks}">
+        <td th:text="${t.description}"></td>
+        <td th:text="${t.status}"></td>
+        <td th:text="${a.staff.name}"></td>
+    </tr>
+    </tr>
+
+    </tbody>
+</table>
 
 </body>
 </html>

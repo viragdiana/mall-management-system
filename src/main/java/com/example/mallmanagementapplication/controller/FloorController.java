@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/floors")
 public class FloorController {
 
-    private final FloorService service;
+    private final FloorService floorService;
     private final MallService mallService;
 
-    public FloorController(FloorService service, MallService mallService) {
-        this.service = service;
+    public FloorController(FloorService floorService, MallService mallService) {
+        this.floorService = floorService;
         this.mallService = mallService;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("floors", service.getAll());
+        model.addAttribute("floors", floorService.getAll());
         return "floors/index";
     }
 
@@ -47,7 +47,7 @@ public class FloorController {
         }
 
         try {
-            service.save(floor);
+            floorService.save(floor);
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("malls", mallService.getAll());
@@ -59,7 +59,7 @@ public class FloorController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("floor", service.getById(id));
+        model.addAttribute("floor", floorService.getById(id));
         model.addAttribute("malls", mallService.getAll());
         return "floors/edit";
     }
@@ -76,12 +76,12 @@ public class FloorController {
             return "floors/edit";
         }
 
-        Floor existing = service.getById(id);
+        Floor existing = floorService.getById(id);
         existing.setLevel(updated.getLevel());
         existing.setMall(updated.getMall());
 
         try {
-            service.save(existing);
+            floorService.save(existing);
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("malls", mallService.getAll());
@@ -93,23 +93,25 @@ public class FloorController {
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
-        service.delete(id);
+        floorService.delete(id);
         return "redirect:/floors";
     }
 
-
+    /**
+     * 🔥 DETAILS COMPLET
+     */
     @Transactional
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
 
-        Floor floor = service.getById(id);
+        Floor floor = floorService.getById(id);
 
         model.addAttribute("floor", floor);
         model.addAttribute("shops", floor.getShops());
         model.addAttribute("assets", floor.getElectricalAssets());
         model.addAttribute("assignments", floor.getAssignments());
+        model.addAttribute("tasks", floorService.getTasksForFloor(floor));
 
         return "floors/details";
     }
-
 }

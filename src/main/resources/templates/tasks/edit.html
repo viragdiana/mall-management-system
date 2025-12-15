@@ -13,7 +13,6 @@
         .error { color:#c0392b; font-size:0.9rem; }
     </style>
 </head>
-
 <body>
 
 <h1>Edit Maintenance Task</h1>
@@ -26,8 +25,6 @@
 
     <label>Description:</label>
     <input th:field="*{description}" required />
-    <div th:if="${#fields.hasErrors('description')}" class="error"
-         th:errors="*{description}"></div>
 
     <label>Status:</label>
     <select th:field="*{status}">
@@ -37,17 +34,8 @@
         </option>
     </select>
 
-    <label>Floor:</label>
-    <select th:field="*{floor.id}" required>
-        <option th:each="f : ${floors}"
-                th:value="${f.id}"
-                th:text="'Level ' + ${f.level}">
-        </option>
-    </select>
-
-    <label>Assignment (optional):</label>
-    <select th:field="*{assignment.id}">
-        <option value="">-- none --</option>
+    <label>Assignment:</label>
+    <select th:field="*{assignment.id}" required>
         <option th:each="a : ${assignments}"
                 th:value="${a.id}"
                 th:text="${a.staff.name + ' (Floor ' + a.floor.level + ')'}">

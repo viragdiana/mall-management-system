@@ -1,10 +1,13 @@
 package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Floor;
+import com.example.mallmanagementapplication.model.MaintenanceTask;
+import com.example.mallmanagementapplication.model.StaffAssignment;
 import com.example.mallmanagementapplication.repository.FloorRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,7 +29,7 @@ public class FloorService {
     }
 
     public Floor save(Floor floor) {
-        // business rule: un mall nu poate avea două etaje cu același level
+
         if (floor.getMall() == null || floor.getMall().getId() == null) {
             throw new IllegalStateException("Floor must belong to a mall.");
         }
@@ -34,7 +37,9 @@ public class FloorService {
         repo.findByLevelAndMall_Id(floor.getLevel(), floor.getMall().getId())
                 .ifPresent(existing -> {
                     if (floor.getId() == null || !existing.getId().equals(floor.getId())) {
-                        throw new IllegalStateException("A floor with this level already exists in this mall!");
+                        throw new IllegalStateException(
+                                "A floor with this level already exists in this mall!"
+                        );
                     }
                 });
 
@@ -46,5 +51,18 @@ public class FloorService {
             throw new EntityNotFoundException("Floor not found: " + id);
         }
         repo.deleteById(id);
+    }
+
+    /**
+     * 🔥 TASK-URI DERIVATE (Floor → Assignments → Tasks)
+     */
+    public List<MaintenanceTask> getTasksForFloor(Floor floor) {
+        List<MaintenanceTask> tasks = new ArrayList<>();
+
+        for (StaffAssignment a : floor.getAssignments()) {
+            tasks.addAll(a.getTasks());
+        }
+
+        return tasks;
     }
 }

@@ -13,30 +13,25 @@ public class MaintenanceTask implements Identifiable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Description cannot be blank")
     @Size(min = 3, max = 255)
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
+    @NotNull(message = "Status is required")
     private TaskStatus status;
 
-    // 🔥 LEGĂTURA NOUĂ CU FLOOR
+    // 🔗 LEGĂTURA UNICĂ
     @ManyToOne(optional = false)
-    @JoinColumn(name = "floor_id")
-    private Floor floor;
-
-    // Relația existentă cu StaffAssignment
-    @ManyToOne
     @JoinColumn(name = "assignment_id")
     private StaffAssignment assignment;
 
     public MaintenanceTask() {}
 
-    public MaintenanceTask(String description, TaskStatus status, Floor floor) {
+    public MaintenanceTask(String description, TaskStatus status, StaffAssignment assignment) {
         this.description = description;
         this.status = status;
-        this.floor = floor;
+        this.assignment = assignment;
     }
 
     @Override
@@ -48,9 +43,6 @@ public class MaintenanceTask implements Identifiable {
 
     public TaskStatus getStatus() { return status; }
     public void setStatus(TaskStatus status) { this.status = status; }
-
-    public Floor getFloor() { return floor; }
-    public void setFloor(Floor floor) { this.floor = floor; }
 
     public StaffAssignment getAssignment() { return assignment; }
     public void setAssignment(StaffAssignment assignment) { this.assignment = assignment; }

@@ -16,7 +16,6 @@
         .top-bar { margin-bottom: 1rem; }
     </style>
 </head>
-
 <body>
 
 <h1>Maintenance Tasks</h1>
@@ -30,8 +29,8 @@
     <tr>
         <th>Description</th>
         <th>Status</th>
-        <th>Floor</th>
         <th>Assignment</th>
+        <th>Floor</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -40,8 +39,10 @@
     <tr th:each="t : ${tasks}">
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
-        <td th:text="${t.floor.level}"></td>
+
         <td th:text="${t.assignment != null ? t.assignment.staff.name : '—'}"></td>
+
+        <td th:text="${t.assignment != null ? t.assignment.floor.level : '—'}"></td>
 
         <td>
             <a class="button" th:href="@{/tasks/{id}(id=${t.id})}">Details</a>

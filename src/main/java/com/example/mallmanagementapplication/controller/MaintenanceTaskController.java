@@ -2,54 +2,53 @@ package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.TaskStatus;
-import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.MaintenanceTaskService;
 import com.example.mallmanagementapplication.service.StaffAssignmentService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tasks")
 public class MaintenanceTaskController {
 
-    private final MaintenanceTaskService service;
+    private final MaintenanceTaskService taskService;
     private final StaffAssignmentService assignmentService;
-    private final FloorService floorService;
 
     public MaintenanceTaskController(
-            MaintenanceTaskService service,
-            StaffAssignmentService assignmentService,
-            FloorService floorService
+            MaintenanceTaskService taskService,
+            StaffAssignmentService assignmentService
     ) {
-        this.service = service;
+        this.taskService = taskService;
         this.assignmentService = assignmentService;
-        this.floorService = floorService;
     }
 
+    /* ===================== LIST ===================== */
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("tasks", service.getAll());
+        model.addAttribute("tasks", taskService.getAll());
         return "tasks/index";
     }
 
+    /* ===================== DETAILS ===================== */
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-        model.addAttribute("task", service.getById(id));
+        model.addAttribute("task", taskService.getById(id));
         return "tasks/details";
     }
 
+    /* ===================== CREATE FORM ===================== */
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("task", new MaintenanceTask());
         model.addAttribute("statuses", TaskStatus.values());
-        model.addAttribute("floors", floorService.getAll());
         model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/new";
     }
 
+    /* ===================== CREATE ===================== */
     @PostMapping
     public String create(
             @Valid @ModelAttribute("task") MaintenanceTask task,
@@ -58,17 +57,15 @@ public class MaintenanceTaskController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("statuses", TaskStatus.values());
-            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/new";
         }
 
         try {
-            service.save(task);
+            taskService.save(task);
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("statuses", TaskStatus.values());
-            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/new";
         }
@@ -76,15 +73,16 @@ public class MaintenanceTaskController {
         return "redirect:/tasks";
     }
 
+    /* ===================== EDIT FORM ===================== */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("task", service.getById(id));
+        model.addAttribute("task", taskService.getById(id));
         model.addAttribute("statuses", TaskStatus.values());
-        model.addAttribute("floors", floorService.getAll());
         model.addAttribute("assignments", assignmentService.getAll());
         return "tasks/edit";
     }
 
+    /* ===================== UPDATE ===================== */
     @PostMapping("/{id}/edit")
     public String update(
             @PathVariable Long id,
@@ -94,24 +92,20 @@ public class MaintenanceTaskController {
     ) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("statuses", TaskStatus.values());
-            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/edit";
         }
 
-        MaintenanceTask existing = service.getById(id);
-
+        MaintenanceTask existing = taskService.getById(id);
         existing.setDescription(updated.getDescription());
         existing.setStatus(updated.getStatus());
-        existing.setFloor(updated.getFloor());       // NEW
         existing.setAssignment(updated.getAssignment());
 
         try {
-            service.save(existing);
+            taskService.save(existing);
         } catch (IllegalStateException ex) {
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("statuses", TaskStatus.values());
-            model.addAttribute("floors", floorService.getAll());
             model.addAttribute("assignments", assignmentService.getAll());
             return "tasks/edit";
         }
@@ -119,9 +113,10 @@ public class MaintenanceTaskController {
         return "redirect:/tasks";
     }
 
+    /* ===================== DELETE ===================== */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
-        service.delete(id);
+        taskService.delete(id);
         return "redirect:/tasks";
     }
 }
