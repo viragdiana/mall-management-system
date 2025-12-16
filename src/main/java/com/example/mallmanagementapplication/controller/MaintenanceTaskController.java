@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tasks")
-public class MaintenanceTaskController {
+public class  MaintenanceTaskController {
 
     private final MaintenanceTaskService taskService;
     private final StaffAssignmentService assignmentService;

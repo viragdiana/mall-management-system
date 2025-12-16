@@ -5,11 +5,15 @@
     <title>Task Details</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        .box { background:#f9f9f9; padding:1.5rem; border-radius:6px; width:350px; }
+        .box {
+            background:#f9f9f9; padding:1.5rem;
+            border-radius:6px; width:350px;
+        }
         p { margin:0.5rem 0; }
         a.button {
             background:#2980b9; color:white; padding:0.5rem 1rem;
-            border-radius:4px; text-decoration:none; display:inline-block; margin-top:1rem;
+            border-radius:4px; text-decoration:none;
+            display:inline-block; margin-top:1rem;
         }
     </style>
 </head>
@@ -19,11 +23,16 @@
 <h1>Maintenance Task</h1>
 
 <div class="box">
-    <p><strong>Description:</strong> <span th:text="${task.description}"></span></p>
-    <p><strong>Status:</strong> <span th:text="${task.status}"></span></p>
+    <p><strong>Description:</strong>
+        <span th:text="${task.description}"></span>
+    </p>
 
-    <p><strong>Assigned Staff:</strong>
-        <span th:text="${task.assignment != null ? task.assignment.staff.name : 'Unassigned'}"></span>
+    <p><strong>Status:</strong>
+        <span th:text="${task.status}"></span>
+    </p>
+
+    <p><strong>AssignmentId:</strong>
+        <span th:text="${task.assignment != null ? task.assignment.id : '—'}"></span>
     </p>
 
     <p><strong>Floor:</strong>

@@ -29,7 +29,7 @@
     <tr>
         <th>Description</th>
         <th>Status</th>
-        <th>Assignment</th>
+        <th>AssignmentId</th>   <!-- 🔹 MODIFICAT -->
         <th>Floor</th>
         <th>Actions</th>
     </tr>
@@ -40,7 +40,8 @@
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
 
-        <td th:text="${t.assignment != null ? t.assignment.staff.name : '—'}"></td>
+        <!-- 🔹 AFIȘĂM ID-ul assignmentului -->
+        <td th:text="${t.assignment != null ? t.assignment.id : '—'}"></td>
 
         <td th:text="${t.assignment != null ? t.assignment.floor.level : '—'}"></td>
 
