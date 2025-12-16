@@ -132,37 +132,29 @@
 <!-- ================= MAINTENANCE TASKS (DERIVED) ================= -->
 <h2>Maintenance Tasks</h2>
 
-<div th:if="${#lists.isEmpty(assignments)}" class="empty">
-    No maintenance tasks (no assignments).
+<div th:if="${#lists.isEmpty(tasks)}" class="empty">
+    No maintenance tasks for this floor.
 </div>
 
-<table th:if="${!#lists.isEmpty(assignments)}">
+<table th:if="${!#lists.isEmpty(tasks)}">
     <thead>
     <tr>
         <th>Description</th>
         <th>Status</th>
         <th>Assigned Staff</th>
+        <th>Shift</th>
     </tr>
     </thead>
     <tbody>
-
-    <!-- iterăm assignments → tasks -->
-    <tr th:each="a : ${assignments}">
-        <td colspan="3" th:if="${#lists.isEmpty(a.tasks)}" class="empty">
-            No tasks for <strong th:text="${a.staff.name}"></strong>
-        </td>
-    </tr>
-
-    <tr th:each="a : ${assignments}">
-    <tr th:each="t : ${a.tasks}">
+    <tr th:each="t : ${tasks}">
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
-        <td th:text="${a.staff.name}"></td>
+        <td th:text="${t.assignment != null ? t.assignment.staff.name : '—'}"></td>
+        <td th:text="${t.assignment != null ? t.assignment.shift : '—'}"></td>
     </tr>
-    </tr>
-
     </tbody>
 </table>
+
 
 </body>
 </html>
