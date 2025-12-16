@@ -35,6 +35,7 @@
         <th>Owner</th>
         <th>Area (sqm)</th>
         <th>Type</th>
+        <th>Floor</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -44,6 +45,8 @@
         <td th:text="${s.ownerName}"></td>
         <td th:text="${s.areaSqm}"></td>
         <td th:text="${s.type}"></td>
+        <td th:text="${s.floor.level}"></td>
+
         <td>
             <a th:href="@{/shops/{id}(id=${s.id})}" class="button">Details</a>
             <a th:href="@{/shops/{id}/edit(id=${s.id})}" class="button">Edit</a>

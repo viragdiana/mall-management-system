@@ -40,34 +40,31 @@ public class PurchaseService {
 
         if (purchase.getAmount() == null ||
                 purchase.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalStateException("Amount must be positive!");
+            throw new IllegalStateException("Amount must be greater than zero");
         }
 
-        // Validate CUSTOMER exists
-        if (purchase.getCustomer() == null || purchase.getCustomer().getId() == null) {
-            throw new IllegalStateException("Purchase must have a customer!");
+        if (purchase.getCustomer() == null ||
+                purchase.getCustomer().getEmail() == null) {
+            throw new IllegalStateException("Customer email is required");
         }
 
-        Customer customer = customerRepo.findById(purchase.getCustomer().getId())
-                .orElseThrow(() -> new IllegalStateException("Customer does not exist!"));
-
-        purchase.setCustomer(customer);
-
-        // Validate SHOP exists
-        if (purchase.getShop() == null || purchase.getShop().getId() == null) {
-            throw new IllegalStateException("Purchase must have a shop!");
-        }
+        Customer customer = customerRepo
+                .findByEmailIgnoreCase(purchase.getCustomer().getEmail().trim())
+                .orElseThrow(() ->
+                        new IllegalStateException("Customer with this email does not exist"));
 
         Shop shop = shopRepo.findById(purchase.getShop().getId())
-                .orElseThrow(() -> new IllegalStateException("Shop does not exist!"));
+                .orElseThrow(() ->
+                        new IllegalStateException("Shop does not exist"));
 
+        purchase.setCustomer(customer);
         purchase.setShop(shop);
 
         return repo.save(purchase);
     }
 
+
     public void delete(Long id) {
-        Purchase p = getById(id);
-        repo.delete(p);
+        repo.deleteById(id);
     }
 }

@@ -22,7 +22,7 @@ public class StaffAssignment implements Identifiable {
     /** Assignment → MaintenanceStaff */
     @ManyToOne(optional = false)
     @JoinColumn(name = "staff_id")
-    private MaintenanceStaff staff;
+    private Staff staff;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -46,8 +46,8 @@ public class StaffAssignment implements Identifiable {
     public Floor getFloor() { return floor; }
     public void setFloor(Floor floor) { this.floor = floor; }
 
-    public MaintenanceStaff getStaff() { return staff; }
-    public void setStaff(MaintenanceStaff staff) { this.staff = staff; }
+    public Staff getStaff() { return staff; }
+    public void setStaff(Staff staff) { this.staff = staff; }
 
     public Shift getShift() { return shift; }
     public void setShift(Shift shift) { this.shift = shift; }

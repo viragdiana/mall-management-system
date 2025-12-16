@@ -33,12 +33,29 @@
          th:errors="*{name}"></div>
 
     <label>Currency:</label>
-    <input th:field="*{currency}" required />
+    <select th:field="*{currency}" required>
+        <option value="" disabled selected>Select currency</option>
+        <option value="EUR">EUR</option>
+        <option value="USD">USD</option>
+        <option value="RON">RON</option>
+        <option value="GBP">GBP</option>
+    </select>
+
+<!--    <div th:if="${#fields.hasErrors('currency')}" class="error"-->
+<!--         th:errors="*{currency}"></div>-->
 
     <label>Email:</label>
-    <input th:field="*{email}" required />
-    <div th:if="${#fields.hasErrors('email')}" class="error"
-         th:errors="*{email}"></div>
+    <input type="email"
+           th:field="*{email}"
+           required
+           pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+           title="Enter a valid email address without spaces" />
+
+<!--    <div th:if="${#fields.hasErrors('email')}" class="error"-->
+<!--         th:errors="*{email}"></div>-->
+
+<!--    <div th:if="${#fields.hasErrors('email')}" class="error"-->
+<!--         th:errors="*{email}"></div>-->
 
     <button type="submit">Save</button>
 </form>

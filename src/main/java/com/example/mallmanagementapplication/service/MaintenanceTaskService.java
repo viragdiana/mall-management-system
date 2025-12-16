@@ -35,8 +35,16 @@ public class MaintenanceTaskService {
             throw new IllegalStateException("Task must have an assignment!");
         }
 
-        assignmentRepo.findById(task.getAssignment().getId())
+        var assignment = assignmentRepo.findById(task.getAssignment().getId())
                 .orElseThrow(() -> new IllegalStateException("Assignment does not exist"));
+
+        if (!(assignment.getStaff() instanceof com.example.mallmanagementapplication.model.MaintenanceStaff)) {
+            throw new IllegalStateException(
+                    "Tasks can only be assigned to maintenance staff"
+            );
+        }
+
+        task.setAssignment(assignment);
 
         return repo.save(task);
     }

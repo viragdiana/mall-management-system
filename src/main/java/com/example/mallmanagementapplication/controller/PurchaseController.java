@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 @Controller
 @RequestMapping("/purchases")
 public class PurchaseController {
@@ -32,18 +31,18 @@ public class PurchaseController {
         return "purchases/index";
     }
 
-    @GetMapping("/{id}")
-    public String details(@PathVariable Long id, Model model) {
-        model.addAttribute("purchase", service.getById(id));
-        return "purchases/details";
-    }
-
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("purchase", new Purchase());
         model.addAttribute("customers", customerService.getAll());
         model.addAttribute("shops", shopService.getAll());
         return "purchases/new";
+    }
+
+    @GetMapping("/{id}")
+    public String details(@PathVariable Long id, Model model) {
+        model.addAttribute("purchase", service.getById(id));
+        return "purchases/details";
     }
 
     @PostMapping
@@ -91,21 +90,22 @@ public class PurchaseController {
             return "purchases/edit";
         }
 
-        Purchase existing = service.getById(id);
-        existing.setAmount(updated.getAmount());
-        existing.setCustomer(updated.getCustomer());
-        existing.setShop(updated.getShop());
-
         try {
+            Purchase existing = service.getById(id);
+            existing.setAmount(updated.getAmount());
+            existing.setCustomer(updated.getCustomer());
+            existing.setShop(updated.getShop());
+
             service.save(existing);
+            return "redirect:/purchases";
+
         } catch (IllegalStateException ex) {
+            model.addAttribute("purchase", updated);
             model.addAttribute("errorMessage", ex.getMessage());
             model.addAttribute("customers", customerService.getAll());
             model.addAttribute("shops", shopService.getAll());
             return "purchases/edit";
         }
-
-        return "redirect:/purchases";
     }
 
     @PostMapping("/{id}/delete")

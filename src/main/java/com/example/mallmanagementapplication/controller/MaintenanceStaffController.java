@@ -8,15 +8,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
+import com.example.mallmanagementapplication.model.StaffAssignment;
+import java.util.List;
 
 @Controller
 @RequestMapping("/maintenance-staff")
 public class MaintenanceStaffController {
 
     private final MaintenanceStaffService service;
+    private final StaffAssignmentRepository staffAssignmentRepository;
 
-    public MaintenanceStaffController(MaintenanceStaffService service) {
+    public MaintenanceStaffController(
+            MaintenanceStaffService service,
+            StaffAssignmentRepository staffAssignmentRepository
+    ) {
         this.service = service;
+        this.staffAssignmentRepository = staffAssignmentRepository;
     }
 
     @GetMapping
@@ -27,9 +35,18 @@ public class MaintenanceStaffController {
 
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-        model.addAttribute("staff", service.getById(id));
+
+        MaintenanceStaff staff = service.getById(id);
+
+        List<StaffAssignment> assignments =
+                staffAssignmentRepository.findByStaffId(id);
+
+        model.addAttribute("staff", staff);
+        model.addAttribute("assignments", assignments);
+
         return "maintenance/staff/details";
     }
+
 
     @GetMapping("/new")
     public String newForm(Model model) {

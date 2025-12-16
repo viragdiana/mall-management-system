@@ -38,8 +38,17 @@
         <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
     </select>
 
-    <!-- Floor: momentan controllerul nu îți dă lista de floors,
-         deci nu o includ ca dropdown ca să nu crape. -->
+    <label>Floor:</label>
+    <select th:field="*{floor.id}" required>
+        <option value="" disabled selected>-- Select floor --</option>
+        <option th:each="f : ${floors}"
+                th:value="${f.id}"
+                th:text="${f.level}">
+        </option>
+    </select>
+
+    <div th:if="${#fields.hasErrors('floor')}"
+         th:errors="*{floor}" class="error"></div>
 
     <button type="submit">Save</button>
 </form>

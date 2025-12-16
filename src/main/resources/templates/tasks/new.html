@@ -32,7 +32,7 @@
     </select>
 
     <label>Assignment:</label>
-    <select th:field="*{assignment.id}" required>
+    <select th:field="*{assignment}" required>
         <option th:each="a : ${assignments}"
                 th:value="${a.id}"
                 th:text="${a.staff.name + ' (Floor ' + a.floor.level + ')'}">

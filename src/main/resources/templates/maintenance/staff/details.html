@@ -4,12 +4,56 @@
     <meta charset="UTF-8">
     <title>Maintenance Staff Details</title>
     <style>
-        body { font-family: Arial; margin: 2rem; }
-        .box { background:#f9f9f9; padding:1.5rem; width:350px; border-radius:6px; }
-        p { margin:0.5rem 0; }
+        body {
+            font-family: Arial;
+            margin: 2rem;
+        }
+
+        .box {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            width: 360px;
+            border-radius: 6px;
+        }
+
+        p {
+            margin: 0.5rem 0;
+        }
+
+        h3 {
+            margin-top: 2rem;
+        }
+
+        table {
+            margin-top: 0.5rem;
+            border-collapse: collapse;
+            width: 360px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.4rem;
+            text-align: left;
+        }
+
+        th {
+            background: #eee;
+        }
+
+        .empty {
+            margin-top: 0.5rem;
+            font-style: italic;
+            color: #555;
+        }
+
         a.button {
-            display:inline-block; margin-top:1rem; padding:0.4rem 0.8rem;
-            background:#2980b9; color:white; text-decoration:none; border-radius:4px;
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.4rem 0.8rem;
+            background: #2980b9;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -22,7 +66,27 @@
     <p><strong>Type:</strong> <span th:text="${staff.type}"></span></p>
 </div>
 
+<h3>Assignments</h3>
+
+<div th:if="${#lists.isEmpty(assignments)}">
+    No assignments yet.
+</div>
+
+<table th:if="${!#lists.isEmpty(assignments)}">
+    <tr>
+        <th>Floor</th>
+        <th>Shift</th>
+    </tr>
+    <tr th:each="a : ${assignments}">
+        <td th:text="${a.floor.level}"></td>
+        <td th:text="${a.shift}"></td>
+    </tr>
+</table>
+
+
+
 <a href="/maintenance-staff" class="button">← Back</a>
 
 </body>
 </html>
+

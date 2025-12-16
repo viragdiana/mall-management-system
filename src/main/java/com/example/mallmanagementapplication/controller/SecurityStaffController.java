@@ -7,16 +7,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
 
 @Controller
 @RequestMapping("/security-staff")
 public class SecurityStaffController {
 
     private final SecurityStaffService service;
+    private final StaffAssignmentRepository assignmentRepo;
 
-    public SecurityStaffController(SecurityStaffService service) {
+    public SecurityStaffController(
+            SecurityStaffService service,
+            StaffAssignmentRepository assignmentRepo
+    ) {
         this.service = service;
+        this.assignmentRepo = assignmentRepo;
     }
+
 
     @GetMapping
     public String index(Model model) {
@@ -26,9 +33,17 @@ public class SecurityStaffController {
 
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-        model.addAttribute("staff", service.getById(id));
+
+        SecurityStaff staff = service.getById(id);
+
+        var assignments = assignmentRepo.findByStaffId(id);
+
+        model.addAttribute("staff", staff);
+        model.addAttribute("assignments", assignments);
+
         return "security/details";
     }
+
 
     @GetMapping("/new")
     public String newForm(Model model) {
