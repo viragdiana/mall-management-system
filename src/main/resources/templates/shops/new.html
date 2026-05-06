@@ -8,7 +8,15 @@
         form { width: 400px; background:#f9f9f9; padding:1.5rem; border-radius:6px; }
         label { display:block; margin-top:1rem; }
         input, select { width:100%; padding:0.5rem; margin-top:0.3rem; }
-        button { margin-top:1rem; padding:0.6rem; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer; }
+        button {
+            margin-top:1rem;
+            padding:0.6rem;
+            background:#2980b9;
+            color:white;
+            border:none;
+            border-radius:4px;
+            cursor:pointer;
+        }
         a { margin-top:1rem; display:block; }
         .error { color:#c0392b; font-size:0.9rem; }
     </style>
@@ -21,34 +29,48 @@
 
 <form th:action="@{/shops}" th:object="${shop}" method="post">
 
+    <!-- NAME -->
     <label>Name:</label>
-    <input th:field="*{name}" required />
-    <div th:if="${#fields.hasErrors('name')}" class="error" th:errors="*{name}"></div>
+    <input type="text" th:field="*{name}" required />
+    <div th:if="${#fields.hasErrors('name')}"
+         class="error" th:errors="*{name}"></div>
 
+    <!-- OWNER -->
     <label>Owner Name:</label>
-    <input th:field="*{ownerName}" required />
-    <div th:if="${#fields.hasErrors('ownerName')}" class="error" th:errors="*{ownerName}"></div>
+    <input type="text" th:field="*{ownerName}" required />
+    <div th:if="${#fields.hasErrors('ownerName')}"
+         class="error" th:errors="*{ownerName}"></div>
 
+    <!-- AREA -->
     <label>Area (sqm):</label>
-    <input th:field="*{areaSqm}" type="number" step="0.1" min="0.1" required />
-    <div th:if="${#fields.hasErrors('areaSqm')}" class="error" th:errors="*{areaSqm}"></div>
+    <input type="number" th:field="*{areaSqm}"
+           step="0.1" min="0.1" required />
+    <div th:if="${#fields.hasErrors('areaSqm')}"
+         class="error" th:errors="*{areaSqm}"></div>
 
+    <!-- TYPE (ENUM) -->
     <label>Type:</label>
-    <select th:field="*{type}">
-        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+    <select th:field="*{type}" required>
+        <option value="">-- Select type --</option>
+        <option th:each="t : ${types}"
+                th:value="${t}"
+                th:text="${t}">
+        </option>
     </select>
+    <div th:if="${#fields.hasErrors('type')}"
+         class="error" th:errors="*{type}"></div>
 
+    <!-- FLOOR (ENTITY via ID) -->
     <label>Floor:</label>
     <select th:field="*{floor.id}" required>
-        <option value="" disabled selected>-- Select floor --</option>
+        <option value="">-- Select floor --</option>
         <option th:each="f : ${floors}"
                 th:value="${f.id}"
                 th:text="${f.level}">
         </option>
     </select>
-
-    <div th:if="${#fields.hasErrors('floor')}"
-         th:errors="*{floor}" class="error"></div>
+    <div th:if="${#fields.hasErrors('floor.id')}"
+         class="error" th:errors="*{floor.id}"></div>
 
     <button type="submit">Save</button>
 </form>

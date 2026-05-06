@@ -5,6 +5,7 @@ import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.StaffAssignment;
 import com.example.mallmanagementapplication.repository.FloorRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,15 +20,29 @@ public class FloorService {
         this.repo = repo;
     }
 
+    /* ========== LIST ALL (used elsewhere) ========== */
     public List<Floor> getAll() {
         return repo.findAll();
     }
 
+    /* ========== FILTER BY MALL + SORT ========== */
+    public List<Floor> getFilteredAndSorted(
+            Long mallId,
+            Sort sort
+    ) {
+        if (mallId == null) {
+            return repo.findAll(sort);
+        }
+        return repo.findByMall_Id(mallId, sort);
+    }
+
+    /* ========== GET BY ID ========== */
     public Floor getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Floor not found: " + id));
     }
 
+    /* ========== SAVE ========== */
     public Floor save(Floor floor) {
 
         if (floor.getMall() == null || floor.getMall().getId() == null) {
@@ -46,6 +61,7 @@ public class FloorService {
         return repo.save(floor);
     }
 
+    /* ========== DELETE ========== */
     public void delete(Long id) {
         if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Floor not found: " + id);
@@ -53,16 +69,12 @@ public class FloorService {
         repo.deleteById(id);
     }
 
-    /**
-     * 🔥 TASK-URI DERIVATE (Floor → Assignments → Tasks)
-     */
+    /* ========== TASKS DERIVED ========== */
     public List<MaintenanceTask> getTasksForFloor(Floor floor) {
         List<MaintenanceTask> tasks = new ArrayList<>();
-
         for (StaffAssignment a : floor.getAssignments()) {
             tasks.addAll(a.getTasks());
         }
-
         return tasks;
     }
 }

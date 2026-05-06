@@ -2,9 +2,11 @@ package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.MaintenanceTask;
 import com.example.mallmanagementapplication.model.TaskStatus;
+import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.MaintenanceTaskService;
 import com.example.mallmanagementapplication.service.StaffAssignmentService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,23 +14,52 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tasks")
-public class  MaintenanceTaskController {
+public class MaintenanceTaskController {
 
     private final MaintenanceTaskService taskService;
     private final StaffAssignmentService assignmentService;
+    private final FloorService floorService;
 
     public MaintenanceTaskController(
             MaintenanceTaskService taskService,
-            StaffAssignmentService assignmentService
+            StaffAssignmentService assignmentService,
+            FloorService floorService
     ) {
         this.taskService = taskService;
         this.assignmentService = assignmentService;
+        this.floorService = floorService;
     }
 
-    /* ===================== LIST ===================== */
+    /* ===================== LIST + FILTER + SORT ===================== */
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("tasks", taskService.getAll());
+    public String index(
+            @RequestParam(required = false) Long floorId,
+            @RequestParam(defaultValue = "status") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model
+    ) {
+        if (!sortBy.equals("status") && !sortBy.equals("floor")) {
+            sortBy = "status";
+        }
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy.equals("floor")
+                ? "assignment.floor.level"
+                : "status").descending()
+                : Sort.by(sortBy.equals("floor")
+                ? "assignment.floor.level"
+                : "status").ascending();
+
+        model.addAttribute(
+                "tasks",
+                taskService.getFilteredAndSorted(floorId, sort)
+        );
+
+        model.addAttribute("floors", floorService.getAll());
+        model.addAttribute("floorId", floorId);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "tasks/index";
     }
 
@@ -39,7 +70,7 @@ public class  MaintenanceTaskController {
         return "tasks/details";
     }
 
-    /* ===================== CREATE FORM ===================== */
+    /* ===================== NEW ===================== */
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("task", new MaintenanceTask());
@@ -73,7 +104,7 @@ public class  MaintenanceTaskController {
         return "redirect:/tasks";
     }
 
-    /* ===================== EDIT FORM ===================== */
+    /* ===================== EDIT ===================== */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("task", taskService.getById(id));

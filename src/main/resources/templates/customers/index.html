@@ -8,37 +8,75 @@
         table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
         th, td { border: 1px solid #ccc; padding: 0.6rem; text-align: left; }
         th { background: #f2f2f2; }
+        th a { color: black; text-decoration: none; }
+        th a:hover { text-decoration: underline; }
         a.button, button {
-            display: inline-block;
             padding: 0.4rem 0.8rem;
-            margin: 0.1rem;
             background: #2980b9;
             color: #fff;
-            text-decoration: none;
             border-radius: 4px;
+            text-decoration: none;
             border: none;
             cursor: pointer;
         }
         button.delete-btn { background: #c0392b; }
-        .top-bar { margin-bottom: 1rem; }
-        .error { color:#c0392b; margin-top:0.5rem; }
+        .filter-box { margin: 1rem 0; }
+        input, select { padding: 0.3rem; }
     </style>
 </head>
 <body>
 
 <h1>Customers</h1>
+<a href="/customers/new" class="button">Add Customer</a>
 
-<div class="top-bar">
-    <a href="/customers/new" class="button">Add Customer</a>
-</div>
+<!-- 3 FILTERE SEPARATE: name, currency, email (dar se COMBINĂ) -->
+<form method="get" action="/customers" class="filter-box">
+    Name:
+    <input type="text" name="name" th:value="${name}" />
 
-<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+    Currency:
+    <select name="currency">
+        <option value="">-- any --</option>
+        <option value="EUR" th:selected="${currency == 'EUR'}">EUR</option>
+        <option value="USD" th:selected="${currency == 'USD'}">USD</option>
+        <option value="RON" th:selected="${currency == 'RON'}">RON</option>
+    </select>
+
+    Email:
+    <input type="text" name="email" th:value="${email}" />
+
+    <button type="submit">Filter</button>
+</form>
 
 <table>
     <thead>
     <tr>
-        <th>Name</th>
-        <th>Currency</th>
+        <th>
+            <a th:href="@{/customers(
+                name=${name},
+                currency=${currency},
+                email=${email},
+                sortBy='name',
+                sortDir=${sortBy == 'name' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Name
+                <span th:if="${sortBy == 'name'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
+        <th>
+            <a th:href="@{/customers(
+                name=${name},
+                currency=${currency},
+                email=${email},
+                sortBy='currency',
+                sortDir=${sortBy == 'currency' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Currency
+                <span th:if="${sortBy == 'currency'}" th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
         <th>Email</th>
         <th>Actions</th>
     </tr>
@@ -52,10 +90,7 @@
         <td>
             <a th:href="@{/customers/{id}(id=${c.id})}" class="button">Details</a>
             <a th:href="@{/customers/{id}/edit(id=${c.id})}" class="button">Edit</a>
-
-            <form th:action="@{/customers/{id}/delete(id=${c.id})}"
-                  method="post"
-                  style="display:inline">
+            <form th:action="@{/customers/{id}/delete(id=${c.id})}" method="post" style="display:inline">
                 <button class="delete-btn" type="submit">Delete</button>
             </form>
         </td>

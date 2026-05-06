@@ -7,6 +7,7 @@ import com.example.mallmanagementapplication.repository.CustomerRepository;
 import com.example.mallmanagementapplication.repository.PurchaseRepository;
 import com.example.mallmanagementapplication.repository.ShopRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,23 +20,39 @@ public class PurchaseService {
     private final CustomerRepository customerRepo;
     private final ShopRepository shopRepo;
 
-    public PurchaseService(PurchaseRepository repo,
-                           CustomerRepository customerRepo,
-                           ShopRepository shopRepo) {
+    public PurchaseService(
+            PurchaseRepository repo,
+            CustomerRepository customerRepo,
+            ShopRepository shopRepo
+    ) {
         this.repo = repo;
         this.customerRepo = customerRepo;
         this.shopRepo = shopRepo;
     }
 
+    /* ========== LIST ALL (used elsewhere) ========== */
     public List<Purchase> getAll() {
         return repo.findAll();
     }
 
+    /* ========== FILTER BY CUSTOMER + SORT ========== */
+    public List<Purchase> getFilteredAndSorted(
+            Long customerId,
+            Sort sort
+    ) {
+        if (customerId == null) {
+            return repo.findAll(sort);
+        }
+        return repo.findByCustomer_Id(customerId, sort);
+    }
+
+    /* ========== GET BY ID ========== */
     public Purchase getById(Long id) {
         return repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Purchase not found: " + id));
     }
 
+    /* ========== SAVE ========== */
     public Purchase save(Purchase purchase) {
 
         if (purchase.getAmount() == null ||
@@ -63,7 +80,7 @@ public class PurchaseService {
         return repo.save(purchase);
     }
 
-
+    /* ========== DELETE ========== */
     public void delete(Long id) {
         repo.deleteById(id);
     }

@@ -1,13 +1,14 @@
 package com.example.mallmanagementapplication.controller;
 
 import com.example.mallmanagementapplication.model.SecurityStaff;
+import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
 import com.example.mallmanagementapplication.service.SecurityStaffService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
 
 @Controller
 @RequestMapping("/security-staff")
@@ -24,33 +25,50 @@ public class SecurityStaffController {
         this.assignmentRepo = assignmentRepo;
     }
 
-
+    /* ===================== LIST + FILTER + SORT ===================== */
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("staffList", service.getAll());
+    public String index(
+            @RequestParam(required = false) String name,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model
+    ) {
+        if (!sortBy.equals("name") && !sortBy.equals("badgeNo")) {
+            sortBy = "name";
+        }
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        model.addAttribute(
+                "staffList",
+                service.getFilteredAndSorted(name, sort)
+        );
+
+        model.addAttribute("name", name);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "security/index";
     }
 
+    /* ===================== DETAILS ===================== */
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-
-        SecurityStaff staff = service.getById(id);
-
-        var assignments = assignmentRepo.findByStaffId(id);
-
-        model.addAttribute("staff", staff);
-        model.addAttribute("assignments", assignments);
-
+        model.addAttribute("staff", service.getById(id));
+        model.addAttribute("assignments", assignmentRepo.findByStaffId(id));
         return "security/details";
     }
 
-
+    /* ===================== NEW ===================== */
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("staff", new SecurityStaff());
         return "security/new";
     }
 
+    /* ===================== CREATE ===================== */
     @PostMapping
     public String create(
             @Valid @ModelAttribute("staff") SecurityStaff staff,
@@ -64,12 +82,14 @@ public class SecurityStaffController {
         return "redirect:/security-staff";
     }
 
+    /* ===================== EDIT ===================== */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("staff", service.getById(id));
         return "security/edit";
     }
 
+    /* ===================== UPDATE ===================== */
     @PostMapping("/{id}/edit")
     public String update(
             @PathVariable Long id,
@@ -88,6 +108,7 @@ public class SecurityStaffController {
         return "redirect:/security-staff";
     }
 
+    /* ===================== DELETE ===================== */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         service.delete(id);

@@ -3,6 +3,7 @@ package com.example.mallmanagementapplication.controller;
 import com.example.mallmanagementapplication.model.Customer;
 import com.example.mallmanagementapplication.service.CustomerService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,37 +19,51 @@ public class CustomerController {
         this.service = service;
     }
 
-    /** LIST */
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("customers", service.getAll());
+    public String index(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String currency,
+            @RequestParam(required = false) String email,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model
+    ) {
+        if (!sortBy.equals("name") && !sortBy.equals("currency")) {
+            sortBy = "name";
+        }
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        model.addAttribute("customers", service.getFilteredAndSorted(name, currency, email, sort));
+
+        model.addAttribute("name", name);
+        model.addAttribute("currency", currency);
+        model.addAttribute("email", email);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "customers/index";
     }
 
-    /** DETAILS */
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
         model.addAttribute("customer", service.getById(id));
         return "customers/details";
     }
 
-    /** NEW FORM */
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("customer", new Customer());
         return "customers/new";
     }
 
-    /** CREATE */
     @PostMapping
-    public String create(
-            @Valid @ModelAttribute("customer") Customer customer,
-            BindingResult bindingResult,
-            Model model
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "customers/new";
-        }
+    public String create(@Valid @ModelAttribute("customer") Customer customer,
+                         BindingResult bindingResult,
+                         Model model) {
+        if (bindingResult.hasErrors()) return "customers/new";
 
         try {
             service.save(customer);
@@ -56,28 +71,21 @@ public class CustomerController {
             model.addAttribute("errorMessage", ex.getMessage());
             return "customers/new";
         }
-
         return "redirect:/customers";
     }
 
-    /** EDIT FORM */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("customer", service.getById(id));
         return "customers/edit";
     }
 
-    /** UPDATE */
     @PostMapping("/{id}/edit")
-    public String update(
-            @PathVariable Long id,
-            @Valid @ModelAttribute("customer") Customer updated,
-            BindingResult bindingResult,
-            Model model
-    ) {
-        if (bindingResult.hasErrors()) {
-            return "customers/edit";
-        }
+    public String update(@PathVariable Long id,
+                         @Valid @ModelAttribute("customer") Customer updated,
+                         BindingResult bindingResult,
+                         Model model) {
+        if (bindingResult.hasErrors()) return "customers/edit";
 
         Customer existing = service.getById(id);
         existing.setName(updated.getName());
@@ -90,11 +98,9 @@ public class CustomerController {
             model.addAttribute("errorMessage", ex.getMessage());
             return "customers/edit";
         }
-
         return "redirect:/customers";
     }
 
-    /** DELETE */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         service.delete(id);

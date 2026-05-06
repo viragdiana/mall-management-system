@@ -5,15 +5,25 @@
     <title>Maintenance Tasks</title>
     <style>
         body { font-family: Arial; margin: 2rem; }
-        table { width: 100%; border-collapse: collapse; }
+        table { width: 100%; border-collapse: collapse; margin-top:1rem; }
         th, td { border: 1px solid #ccc; padding: 0.6rem; }
         th { background: #f2f2f2; }
+        th a { color:black; text-decoration:none; }
+        th a:hover { text-decoration:underline; }
+
         a.button, button {
-            background: #2980b9; color: white; padding: 0.4rem 0.8rem;
-            text-decoration: none; border-radius: 4px; border: none; cursor: pointer;
+            background: #2980b9;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
         }
         button.delete-btn { background: #c0392b; }
+
         .top-bar { margin-bottom: 1rem; }
+        .filter-box { margin: 1rem 0; }
     </style>
 </head>
 <body>
@@ -24,13 +34,50 @@
     <a class="button" href="/tasks/new">+ Add Task</a>
 </div>
 
+<!-- FILTER BY FLOOR -->
+<form method="get" action="/tasks" class="filter-box">
+    Floor:
+    <select name="floorId">
+        <option value="">-- any --</option>
+        <option th:each="f : ${floors}"
+                th:value="${f.id}"
+                th:text="${f.level}"
+                th:selected="${floorId == f.id}">
+        </option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
 <table>
     <thead>
     <tr>
         <th>Description</th>
-        <th>Status</th>
-        <th>AssignmentId</th>   <!-- 🔹 MODIFICAT -->
-        <th>Floor</th>
+
+        <th>
+            <a th:href="@{/tasks(
+                floorId=${floorId},
+                sortBy='status',
+                sortDir=${sortBy == 'status' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Status
+                <span th:if="${sortBy == 'status'}"
+                      th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
+        <th>
+            <a th:href="@{/tasks(
+                floorId=${floorId},
+                sortBy='floor',
+                sortDir=${sortBy == 'floor' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Floor
+                <span th:if="${sortBy == 'floor'}"
+                      th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
+        <th>Assignment</th>
         <th>Actions</th>
     </tr>
     </thead>
@@ -39,17 +86,13 @@
     <tr th:each="t : ${tasks}">
         <td th:text="${t.description}"></td>
         <td th:text="${t.status}"></td>
-
-        <!-- 🔹 AFIȘĂM ID-ul assignmentului -->
-        <td th:text="${t.assignment != null ? t.assignment.id : '—'}"></td>
-
         <td th:text="${t.assignment != null ? t.assignment.floor.level : '—'}"></td>
-
+        <td th:text="${t.assignment != null ? t.assignment.id : '—'}"></td>
         <td>
             <a class="button" th:href="@{/tasks/{id}(id=${t.id})}">Details</a>
             <a class="button" th:href="@{/tasks/{id}/edit(id=${t.id})}">Edit</a>
-
-            <form th:action="@{/tasks/{id}/delete(id=${t.id})}" method="post" style="display:inline;">
+            <form th:action="@{/tasks/{id}/delete(id=${t.id})}"
+                  method="post" style="display:inline;">
                 <button class="delete-btn" type="submit">Delete</button>
             </form>
         </td>

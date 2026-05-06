@@ -5,6 +5,7 @@ import com.example.mallmanagementapplication.service.FloorService;
 import com.example.mallmanagementapplication.service.MallService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +23,37 @@ public class FloorController {
         this.mallService = mallService;
     }
 
+    /* ===================== LIST + FILTER + SORT ===================== */
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("floors", floorService.getAll());
+    public String index(
+            @RequestParam(required = false) Long mallId,
+            @RequestParam(defaultValue = "level") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir,
+            Model model
+    ) {
+        // allow only safe sort fields
+        if (!sortBy.equals("level") && !sortBy.equals("mall")) {
+            sortBy = "level";
+        }
+
+        Sort sort = sortDir.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy.equals("mall") ? "mall.name" : "level").descending()
+                : Sort.by(sortBy.equals("mall") ? "mall.name" : "level").ascending();
+
+        model.addAttribute(
+                "floors",
+                floorService.getFilteredAndSorted(mallId, sort)
+        );
+
+        model.addAttribute("malls", mallService.getAll());
+        model.addAttribute("mallId", mallId);
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+
         return "floors/index";
     }
 
+    /* ===================== NEW ===================== */
     @GetMapping("/new")
     public String newForm(Model model) {
         model.addAttribute("floor", new Floor());
@@ -35,6 +61,7 @@ public class FloorController {
         return "floors/new";
     }
 
+    /* ===================== CREATE ===================== */
     @PostMapping
     public String create(
             @Valid @ModelAttribute("floor") Floor floor,
@@ -57,6 +84,7 @@ public class FloorController {
         return "redirect:/floors";
     }
 
+    /* ===================== EDIT ===================== */
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("floor", floorService.getById(id));
@@ -64,6 +92,7 @@ public class FloorController {
         return "floors/edit";
     }
 
+    /* ===================== UPDATE ===================== */
     @PostMapping("/{id}/edit")
     public String update(
             @PathVariable Long id,
@@ -91,19 +120,17 @@ public class FloorController {
         return "redirect:/floors";
     }
 
+    /* ===================== DELETE ===================== */
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         floorService.delete(id);
         return "redirect:/floors";
     }
 
-    /**
-     * 🔥 DETAILS COMPLET
-     */
+    /* ===================== DETAILS ===================== */
     @Transactional
     @GetMapping("/{id}")
     public String details(@PathVariable Long id, Model model) {
-
         Floor floor = floorService.getById(id);
 
         model.addAttribute("floor", floor);

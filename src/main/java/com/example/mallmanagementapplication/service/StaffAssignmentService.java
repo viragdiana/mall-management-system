@@ -2,11 +2,13 @@ package com.example.mallmanagementapplication.service;
 
 import com.example.mallmanagementapplication.model.Floor;
 import com.example.mallmanagementapplication.model.MaintenanceStaff;
+import com.example.mallmanagementapplication.model.Shift;
 import com.example.mallmanagementapplication.model.StaffAssignment;
 import com.example.mallmanagementapplication.repository.FloorRepository;
 import com.example.mallmanagementapplication.repository.MaintenanceStaffRepository;
 import com.example.mallmanagementapplication.repository.StaffAssignmentRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,43 +30,55 @@ public class StaffAssignmentService {
         this.staffRepo = staffRepo;
     }
 
-    // -------- GET ALL --------
+    /* ========== LIST ALL (used elsewhere) ========== */
     public List<StaffAssignment> getAll() {
         return repo.findAll();
     }
 
-    // -------- GET BY ID --------
-    public StaffAssignment getById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Assignment not found: " + id));
+    /* ========== FILTER BY SHIFT + SORT ========== */
+    public List<StaffAssignment> getFilteredAndSorted(
+            Shift shift,
+            Sort sort
+    ) {
+        if (shift == null) {
+            return repo.findAll(sort);
+        }
+        return repo.findByShift(shift, sort);
     }
 
-    // -------- SAVE WITH VALIDATION --------
+    /* ========== GET BY ID ========== */
+    public StaffAssignment getById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Assignment not found: " + id));
+    }
+
+    /* ========== SAVE WITH VALIDATION ========== */
     public StaffAssignment save(StaffAssignment assignment) {
 
         if (assignment.getShift() == null) {
             throw new IllegalStateException("Shift cannot be null!");
         }
 
-        // VALIDATE FLOOR
         if (assignment.getFloor() == null || assignment.getFloor().getId() == null) {
             throw new IllegalStateException("Assignment must reference a valid floor!");
         }
 
         Floor floor = floorRepo.findById(assignment.getFloor().getId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Floor not found: " + assignment.getFloor().getId()
-                ));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Floor not found: " + assignment.getFloor().getId()
+                        ));
 
-        // VALIDATE STAFF
         if (assignment.getStaff() == null || assignment.getStaff().getId() == null) {
             throw new IllegalStateException("Assignment must reference valid maintenance staff!");
         }
 
         MaintenanceStaff staff = staffRepo.findById(assignment.getStaff().getId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Maintenance staff not found: " + assignment.getStaff().getId()
-                ));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Maintenance staff not found: " + assignment.getStaff().getId()
+                        ));
 
         assignment.setFloor(floor);
         assignment.setStaff(staff);
@@ -72,7 +86,7 @@ public class StaffAssignmentService {
         return repo.save(assignment);
     }
 
-    // -------- DELETE --------
+    /* ========== DELETE ========== */
     public void delete(Long id) {
         if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Assignment not found: " + id);

@@ -8,14 +8,24 @@
         table { border-collapse: collapse; width: 100%; margin-top:1rem; }
         th, td { border:1px solid #ccc; padding:0.6rem; text-align:left; }
         th { background:#f2f2f2; }
+        th a { color:black; text-decoration:none; }
+        th a:hover { text-decoration:underline; }
+
         a.button, button {
-            display:inline-block; padding:0.4rem 0.8rem; margin:0.1rem;
-            background:#2980b9; color:#fff; text-decoration:none;
-            border-radius:4px; border:none; cursor:pointer;
+            display:inline-block;
+            padding:0.4rem 0.8rem;
+            margin:0.1rem;
+            background:#2980b9;
+            color:#fff;
+            text-decoration:none;
+            border-radius:4px;
+            border:none;
+            cursor:pointer;
         }
         button.delete-btn { background:#c0392b; }
+
         .top-bar { margin-bottom:1rem; }
-        .error { color:#c0392b; margin-top:0.5rem; }
+        .filter-box { margin:1rem 0; }
     </style>
 </head>
 <body>
@@ -26,17 +36,52 @@
     <a href="/purchases/new" class="button">Add Purchase</a>
 </div>
 
-<div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+<!-- FILTER BY CUSTOMER -->
+<form method="get" action="/purchases" class="filter-box">
+    Customer:
+    <select name="customerId">
+        <option value="">-- any --</option>
+        <option th:each="c : ${customers}"
+                th:value="${c.id}"
+                th:text="${c.name}"
+                th:selected="${customerId == c.id}">
+        </option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
 
 <table>
     <thead>
     <tr>
-        <th>Amount</th>
-        <th>Customer</th>
+        <th>
+            <a th:href="@{/purchases(
+                customerId=${customerId},
+                sortBy='amount',
+                sortDir=${sortBy == 'amount' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Amount
+                <span th:if="${sortBy == 'amount'}"
+                      th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
+        <th>
+            <a th:href="@{/purchases(
+                customerId=${customerId},
+                sortBy='customer',
+                sortDir=${sortBy == 'customer' and sortDir == 'asc' ? 'desc' : 'asc'}
+            )}">
+                Customer
+                <span th:if="${sortBy == 'customer'}"
+                      th:text="${sortDir == 'asc' ? '▲' : '▼'}"></span>
+            </a>
+        </th>
+
         <th>Shop</th>
         <th>Actions</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="p : ${purchases}">
         <td th:text="${p.amount}"></td>
@@ -45,7 +90,8 @@
         <td>
             <a th:href="@{/purchases/{id}(id=${p.id})}" class="button">Details</a>
             <a th:href="@{/purchases/{id}/edit(id=${p.id})}" class="button">Edit</a>
-            <form th:action="@{/purchases/{id}/delete(id=${p.id})}" method="post" style="display:inline">
+            <form th:action="@{/purchases/{id}/delete(id=${p.id})}"
+                  method="post" style="display:inline">
                 <button type="submit" class="delete-btn">Delete</button>
             </form>
         </td>
